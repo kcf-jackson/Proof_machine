@@ -1,0 +1,24 @@
+objects:
+- constant
+- random variable
+- set (for probability)
+- interval
+- functions
+- 
+
+operations:
+- expectation
+- conditional expectation
+- max, min, sup, inf
+
+some standard machinary:
+- union bound
+- equivalent rv
+- cauchy schwarz
+- Jensen's inequality
+
+Ef(X) \leq f(EX), for convex f
+Bounded-difference
+sub-gaussian
+
+
