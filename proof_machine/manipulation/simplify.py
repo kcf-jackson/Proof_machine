@@ -1,3 +1,14 @@
+def functionalToMeasure(tree):
+	if tree.getRootNodeValue() == 'E' and tree.getLeftChildValue() == 'I':
+		return twoVerticalNodesToOneNode(tree, Node('P', 'function'))
+	return tree
+
+def measureToFunctional(tree):
+	if tree.getRootNodeValue() == 'P':
+		return oneNodeToTwoVerticalNodes(tree, Node('E', 'function'), Node('I', 'function'))
+	return tree
+
+# ========== To-do ==========
 # Simplification
 def simplifyPairs(tree, op1, op2):
 	parentOp = tree.getRootNodeValue()
@@ -51,12 +62,3 @@ def simplifyDiv(tree):
 	return tree
 
 
-def functionalToMeasure(tree):
-	if tree.getRootNodeValue() == 'E' and tree.getLeftChildValue() == 'I':
-		return twoVerticalNodesToOneNode(tree, Node('P', 'function'))
-	return tree
-
-def measureToFunctional(tree):
-	if tree.getRootNodeValue() == 'P':
-		return oneNodeToTwoVerticalNodes(tree, Node('E', 'function'), Node('I', 'function'))
-	return tree

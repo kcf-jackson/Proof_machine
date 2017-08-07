@@ -1,8 +1,27 @@
+# Expansion of tree
+def addNodesOnTop(tree, nodeList):
+	for node in nodeList:
+		tree = addOneNodeOnTop(tree, node)
+	return tree
+
 def addOneNodeOnTop(tree, node):
 	res = BinaryTree(node)
 	res.insertLeft(tree)
 	return res
 
+def addTopRight(tree, topNode, rightTree):
+	res = BinaryTree(topNode)
+	res.insertLeft(tree)
+	res.insertRight(rightTree)
+	return res
+
+def addTopLeft(tree, topNode, leftTree):
+	res = BinaryTree(topNode)
+	res.insertRight(tree)
+	res.insertLeft(leftTree)
+	return res
+
+# Mapping that preserves the number of nodes
 def twoVerticalNodesToOneNode(tree, node):
 	res = BinaryTree(node)
 	res.insertLeft(tree.getLeftChild().getLeftChild())

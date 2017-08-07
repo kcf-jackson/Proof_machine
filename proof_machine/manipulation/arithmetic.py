@@ -10,20 +10,13 @@ takeLog = partial(ApplyFunctionToTree, fun = 'log')
 takeExpectation = partial(ApplyFunctionToTree, fun = 'E')
 takeNegation = partial(ApplyFunctionToTree, fun = '-')
 
-
 # Arithmetic on trees (Add one operator node on top)
 def Tree_Operator_X(tree, x, op):
-	res = BinaryTree(Node(op, "operator"))
-	res.insertLeft(tree)
-	res.insertRight(x)
-	return res
+	return addTopRight(tree, Node(op, 'operator'), x)
 
 def X_Operator_Tree(tree, x, op):
-	res = BinaryTree(Node(op, "operator"))
-	res.insertLeft(x)
-	res.insertRight(tree)
-	return res
-
+	return addTopLeft(tree, Node(op, 'operator'), x)
+	
 add_X = partial(Tree_Operator_X, op = '+')
 sub_X = partial(Tree_Operator_X, op = '-')
 mul_X = partial(Tree_Operator_X, op = '*')

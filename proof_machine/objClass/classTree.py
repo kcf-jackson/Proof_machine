@@ -38,6 +38,9 @@ class BinaryTree:
         return ((not self.leftChild) and (not self.rightChild))
 
     # Right Child
+    def setRightChild(self, tree):
+        self.rightChild = tree
+
     def getRightChild(self):
         return self.rightChild
 
@@ -51,6 +54,9 @@ class BinaryTree:
         return self.rightChild.getRootNodeState()
 
     # Left Child
+    def setLeftChild(self, tree):
+        self.leftChild = tree
+    
     def getLeftChild(self):
         return self.leftChild
 
@@ -99,8 +105,9 @@ def buildParseTree(fpexp, unaryOpList, binaryOpList):
     parentStack = Stack()       # Keep track of the parent node
     parentStack.push(exprTree)  
 
+    parenthesesList = unaryOpList[0:6]
     currentTree = exprTree
-    for i in tokenList:
+    for ind, i in enumerate(tokenList):
         if i in unaryOpList:
             if i in parenthesesList[0:3]:
             # if it is an open parentheses
@@ -129,6 +136,8 @@ def buildParseTree(fpexp, unaryOpList, binaryOpList):
             # if it is a constant or symbol (leaf)
             currentTree.setRootNode(Node(i, 'symbol'))
             currentTree = parentStack.pop()  # move up one level
+            if currentTree.getRootNodeType() == 'function':
+                    currentTree = parentStack.pop()
         else:
             raise ValueError
     return exprTree
@@ -141,12 +150,12 @@ def treeToString(tree):
         return str(tree.getRootNodeValue())
     elif tree.getRootNodeType() == 'operator':
         return '( ' + treeToString(tree.getLeftChild()) + ' ' + str(tree.getRootNodeValue()) + ' ' + treeToString(tree.getRightChild())+ ' )'
-    # elif tree.getRootNode().getType() == 'parentheses':
-        # return '( ' + treeToString(tree.getLeftChild()) + ' )'
+    elif tree.getRootNodeType() == 'parentheses':
+        return '( ' + treeToString(tree.getLeftChild()) + ' )'
 
-# def printFullTree(tree):
-#   print(tree.getRootNodeValue())
-#   if tree.getLeftChild() != None:
-#       printFullTree(tree.getLeftChild())
-#   if tree.getRightChild() != None:
-#       printFullTree(tree.getRightChild())
+def printFullTree(tree, level = 0):
+  print("  " * level + tree.getRootNodeValue() + ' ' + tree.getRootNodeType())
+  if tree.getLeftChild() != None:
+    printFullTree(tree.getLeftChild(), level + 1)
+  if tree.getRightChild() != None:
+    printFullTree(tree.getRightChild(), level + 1)
