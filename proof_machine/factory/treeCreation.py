@@ -74,6 +74,7 @@ def addLRString(str0, i):
 		throw("Error occurs in addLRString, input was " + str0 + ", " + i)
 
 # Build tree from LR / baseThree(B3) code
+# [Export]
 def LRcodeToTree(LRcode):
 	masterTree = BinaryTree(Node('root', 'symbol'))
 	workingTree = masterTree
@@ -92,10 +93,66 @@ def LRcodeToTree(LRcode):
 			print("Character " + i + " is not allowed.")
 	return masterTree
 
+# [Export]
 def baseThreeCodeToTree(baseThreeCode):
 	return LRcodeToTree(baseThreeCodeToLRcode(baseThreeCode))
 
 # Tree decomposition
+# [Export]
+def genericTreeMapping(tree, treeMapCode, nodesDict, addNodesList = [], nodeTreeIndicator = []):
+	nodesList = treeToNodes(tree, nodeTreeIndicator) + addNodesList
+	targetNodesList = mapNodes(nodesList, nodesDict)
+	resTree = baseThreeCodeToTree(treeMapCode)
+	return relabelTree(resTree, targetNodesList)
+
+# This function maps a tree into a list of nodes/tree with breadth-first order
+def treeToNodes(tree, nodeTreeIndicator = []):
+	if nodeTreeIndicator == []:
+		nodeTreeIndicator = '0' * numNodes(tree)
+	# Node is 0, Tree is 1.
+	res = [tree.getRootNode()]
+	nodeQueue = Queue()
+	nodeQueue.enqueue(tree.getLeftChild())
+	nodeQueue.enqueue(tree.getRightChild())
+	count = 0
+	while not nodeQueue.isEmpty():
+		current = nodeQueue.dequeue()
+		if nodeTreeIndicator[count] == '0':
+			res.append(current.getRootNode())
+		elif nodeTreeIndicator[count] == '1':
+			res.append(current)
+		count += 1
+		L = current.getLeftChild()
+		R = current.getRightChild()
+		if L != None:
+			nodeQueue.enqueue(L)
+		if R != None:
+			nodeQueue.enqueue(R)
+	return res	
+
+# This function counts the number of nodes in a tree
+def numNodes(tree):
+	res = [tree.getRootNode()]
+	nodeQueue = Queue()
+	nodeQueue.enqueue(tree.getLeftChild())
+	nodeQueue.enqueue(tree.getRightChild())
+	while not nodeQueue.isEmpty():
+		current = nodeQueue.dequeue()
+		res.append(current.getRootNode())
+		L = current.getLeftChild()
+		R = current.getRightChild()
+		if L != None:
+			nodeQueue.enqueue(L)
+		if R != None:
+			nodeQueue.enqueue(R)
+	return len(res)
+
+def mapNodes(nodesList, nodesDict):
+	resList = []
+	for i in range(len(nodesDict)):
+		resList.append(nodesList[nodesDict[i + 1] - 1])  #must be in order
+	return resList
+
 # This function relabels the tree with a list of nodes with breadth-first order
 def relabelTree(tree, nodeList):
 	# Breadth-first relabelling
@@ -118,57 +175,3 @@ def relabelTree(tree, nodeList):
 		if R != None:
 			nodeQueue.enqueue(R)
 	return tree
-
-# This function maps a tree into a list of nodes with breadth-first order
-def treeToNodes(tree):
-	res = [tree.getRootNode()]
-	nodeQueue = Queue()
-	nodeQueue.enqueue(tree.getLeftChild())
-	nodeQueue.enqueue(tree.getRightChild())
-	while not nodeQueue.isEmpty():
-		current = nodeQueue.dequeue()
-		res.append(current.getRootNode())
-		L = current.getLeftChild()
-		R = current.getRightChild()
-		if L != None:
-			nodeQueue.enqueue(L)
-		if R != None:
-			nodeQueue.enqueue(R)
-	return res
-
-def genericTreeMapping(tree, treeMapCode, nodesDict, newNodesList = []):
-	if newNodesList == []:
-		nodesList = treeToNodes(tree)
-	else:
-		nodesList = newNodesList
-	targetNodesList = mapNodes(nodesList, nodesDict)
-	resTree = baseThreeCodeToTree(treeMapCode)
-	return relabelTree(resTree, targetNodesList)
-
-def mapNodes(nodesList, nodesDict):
-	resList = []
-	for i in range(len(nodesList)):
-		resList.append(nodesList[nodesDict[i + 1] - 1])  #must be in order
-	return resList
-
-# This function maps a tree into a list of nodes/tree with breadth-first order
-# def treeToNodesAndSubtree(tree, nodeTreeIndicator):
-# 	# Node is 0, Tree is 1.
-# 	res = [tree.getRootNode()]
-# 	nodeQueue = Queue()
-# 	nodeQueue.enqueue(tree.getLeftChild())
-# 	nodeQueue.enqueue(tree.getRightChild())
-# 	count = 1
-# 	while not nodeQueue.isEmpty():
-# 		current = nodeQueue.dequeue()
-# 		if nodeTreeIndicator[count] == '0':
-# 			res.append(current.getRootNode())
-# 		elif nodeTreeIndicator[count] == '1':
-# 			res.append(current)
-# 		L = current.getLeftChild()
-# 		R = current.getRightChild()
-# 		if L != None:
-# 			nodeQueue.enqueue(L)
-# 		if R != None:
-# 			nodeQueue.enqueue(R)
-# 	return res	

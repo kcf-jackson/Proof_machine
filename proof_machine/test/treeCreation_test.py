@@ -49,8 +49,18 @@ nodeList = treeToNodes(tree3)
 for node in nodeList:
 	print(node.value + ' ' + node.mathType)
 
-tree4 = genericTreeMapping(tree3, treeMapCode = '200', nodesDict = {1:3, 2:4, 3:1}, newNodesList = [Node('new', 'symbol')])
+tree4 = genericTreeMapping(tree3, treeMapCode = '200', nodesDict = {1:3, 2:4, 3:1}, addNodesList = [Node('new', 'symbol')])
 nodeList = treeToNodes(tree4)
 for node in nodeList:
 	print(node.value + ' ' + node.mathType)
+print("End\n")
+
+
+print("Unit test for genericTreeMapping when children are trees")
+tree3 = baseThreeCodeToTree("2200200")
+printFullTree(tree3)
+
+nodeList = treeToNodes(tree3, '0000100')
+tree4 = genericTreeMapping(tree3, treeMapCode = '2022000', nodesDict = {1:1, 2:3, 3:2, 4:5, 5:4}, addNodesList = [], nodeTreeIndicator = '0000100')
+printFullTree(tree4)
 print("End\n")
