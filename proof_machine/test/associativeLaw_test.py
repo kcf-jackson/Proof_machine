@@ -16,4 +16,6 @@ backwardAssociative(forwardAssociative(expr)).view()
 
 expr = parseTree( "( ( a + b ) + ( c + d ) )" )
 expr.view()
-compoundAssociative(expr).view()
+backwardAssociative(expr).view()
+forwardAssociative(backwardAssociative(expr)).view()
+forwardAssociative(expr).view()
