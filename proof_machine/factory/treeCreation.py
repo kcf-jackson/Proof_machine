@@ -13,29 +13,17 @@ def LRcodeToBaseThreeCode(LRcode):
 		newCompletePath, head = [x for x in head if len(x) == i], [x for x in head if len(x) >= (i+1)]
 		if newCompletePath != []:
 			res += '0' * len(newCompletePath)
-		# print("Completed path: " + ", ".join(newCompletePath))
-		# print(res)
-		# print('Children: ' + " ".join(children))
-		# print(head)
 		for ind, item in enumerate(children):
 			if ind % 2 == 1:
 				hasChildren = [x in head for x in children[(ind - 1):(ind + 1)]]
 				numChildren = sum(hasChildren)
 				if numChildren != 0:
 					res += str(numChildren)
-		# children = subsetByBoolean(children, hasSearchString) # more efficient to trim the children before appending L, R, but this line requires rewriting.
 		children = sum([[x+'L', x+'R'] for x in children], [])
 	return res 
 
 def unique(list0):
 	return list(set(list0))
-
-# def subsetByBoolean(list0, list1):
-# 	res = []
-# 	for ind, item in enumerate(list0):
-# 		if list1[ind]:
-# 			res.append(item)
-# 	return res
 
 # Convert baseThreeCode to LR code
 def baseThreeCodeToLRcode(baseThreeCode):
