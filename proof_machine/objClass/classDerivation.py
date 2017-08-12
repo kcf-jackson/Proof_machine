@@ -1,5 +1,5 @@
 class Derivation:
-	# The Equation class has trees on both sides and an operator in-between.
+	# The Derivation class is a list of tree expression
 	def __init__(self, tree):
 		self.exprList = [tree]
 

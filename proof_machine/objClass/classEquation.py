@@ -5,6 +5,10 @@ class Equation:
 		self.op = OP
 		self.rhs = RHS
 
+	def changeOp(self, op):
+		self.op = op
+		self.view()
+		
 	def view(self):
 		print(treeToString(self.lhs) + ' ' + self.op + ' '+ treeToString(self.rhs))
 
