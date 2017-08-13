@@ -125,7 +125,8 @@ def ifelse(bool0, res1, res2):
 	return res2
 
 def unique(list0):
-	return list(set(list0))
+	from orderedset import OrderedSet
+	return list(OrderedSet(list0))
 
 def map2(list1, list2, FUN):
 	res = []

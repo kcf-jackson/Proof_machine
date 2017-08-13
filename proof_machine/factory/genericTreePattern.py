@@ -1,6 +1,10 @@
 from pythonds.basic.queue import Queue
 
 # Tree decomposition
+def safeGuardedTreeMapping(nodesCheckList, nodesList, treeMapCode, nodesDict):
+	
+	return genericTreeMapping(nodesList, treeMapCode, nodesDict)
+
 def genericTreeMapping(nodesList, treeMapCode, nodesDict):
 	targetNodesList = mapNodes(nodesList, nodesDict)
 	resTree = baseThreeCodeToTree(treeMapCode)
@@ -27,7 +31,7 @@ def treeToNodes(tree, nodeTreeIndicator = []):
 	if R != None:
 		nodeQueue.enqueue(R)
 	count = 1  #count must start at 1
-	while not nodeQueue.isEmpty():
+	while not nodeQueue.isEmpty() and count < len(nodeTreeIndicator):
 		current = nodeQueue.dequeue()
 		if nodeTreeIndicator[count] == '0':
 			res.append(current.getRootNode())
@@ -108,3 +112,25 @@ def numNodes(tree):
 			nodeQueue.enqueue(R)
 	return len(res)
 
+# This function gets all sub-trees
+def getAllParents(tree):
+	numChildren = 0
+	nodeQueue = Queue()
+	L = tree.getLeftChild()
+	R = tree.getRightChild()
+	if L != None:
+		nodeQueue.enqueue(tree.getLeftChild())
+	if R != None:
+		nodeQueue.enqueue(tree.getRightChild())
+	res = [tree]
+	while not nodeQueue.isEmpty():
+		current = nodeQueue.dequeue()
+		L = current.getLeftChild()
+		R = current.getRightChild()
+		if L != None:
+			nodeQueue.enqueue(L)
+		if R != None:
+			nodeQueue.enqueue(R)
+		if L != None or R != None:
+			res.append(current)
+	return res
