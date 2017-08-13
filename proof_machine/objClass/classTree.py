@@ -1,10 +1,13 @@
 from pythonds.basic.stack import Stack
 
 class Node:
-	def __init__(self, value = None, mathType = None, state = None):
-		self.value = value
-		self.mathType = mathType 
-		self.state = state
+    def __init__(self, value = None, mathType = None, state = None):
+        self.value = value
+        self.mathType = mathType 
+        self.state = state
+
+    def __eq__(self, other):
+        return self.value == other.value and self.mathType == other.mathType and self.state == other.state
 
 class BinaryTree:
     def __init__(self,rootObj):
@@ -124,7 +127,7 @@ def buildParseTree(fpexp, unaryOpList, binaryOpList):
             elif i in parenthesesList[3:6]:
             # if it is a close parentheses
                 currentTree = parentStack.pop()
-                if currentTree.getRootNodeType() == 'function':
+                while currentTree.getRootNodeType() == 'function' and not parentStack.isEmpty():
                     currentTree = parentStack.pop()
         elif i in binaryOpList:
             # if it is an binary operator
@@ -136,7 +139,7 @@ def buildParseTree(fpexp, unaryOpList, binaryOpList):
             # if it is a constant or symbol (leaf)
             currentTree.setRootNode(Node(i, 'symbol'))
             currentTree = parentStack.pop()  # move up one level
-            if currentTree.getRootNodeType() == 'function':
+            while currentTree.getRootNodeType() == 'function' and not parentStack.isEmpty():
                     currentTree = parentStack.pop()
         else:
             raise ValueError
@@ -159,3 +162,9 @@ def printFullTree(tree, level = 0):
     printFullTree(tree.getLeftChild(), level + 1)
   if tree.getRightChild() != None:
     printFullTree(tree.getRightChild(), level + 1)
+
+def combineTwoTrees(tree1, tree2, node):
+    res = BinaryTree(node)
+    res.insertLeft(tree1)
+    res.insertRight(tree2)
+    return res
