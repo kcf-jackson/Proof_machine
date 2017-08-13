@@ -1,8 +1,9 @@
 def invariant(tree):
 	op = tree.getRootNodeValue()
-	if tree.getLeftChildValue() == tree.getRightChildValue():
-		if op in ['cap', 'cup']:
-			return tree.getLeftChild()
+	if tree.getLeftChild() != None and tree.getRightChild() != None:
+		if tree.getLeftChildValue() == tree.getRightChildValue():
+			if op in ['cap', 'cup']:
+				return tree.getLeftChild()
 	return tree
 
 def symmetry(tree):
