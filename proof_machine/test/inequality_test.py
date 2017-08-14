@@ -52,7 +52,7 @@ d1 = Derivation(parseTree("( log E exp ( t * S ) / n )"))
 d1.replace('S', 'sum_i X_i')
 d1.substitute('( t * sum_i X_i )', sumPushIn)
 d1.substitute('exp sum_i ( t * X_i )', expSumToProduct)
-d1.substitute('E prod_i exp ( t * X_i )', independencePull)
+d1.substitute('E prod_i exp ( t * X_i )', independencePullOut)
 d1.substitute('log prod_i E exp ( t * X_i )', logProductToSum)
 d1.derive(concavity)
 d1.view()
@@ -61,9 +61,9 @@ print("QED\n")
 
 print("Unit test for autoDerive")
 d1 = Derivation(parseTree("( log E exp ( t * sum_i X_i ) / n )"))
-funList = [sumPushIn, expSumToProduct, independencePull, logProductToSum, concavity]
+funList = [sumPushIn, expSumToProduct, independencePullOut, logProductToSum, concavity]
 nameList = ['sumPushIn', 'expSumToProduct', 'independencePull', 'logProductToSum', 'concavity']
-d1.autoDerive(funList, 6, nameList)
+d1.blindDerive(funList, 6, nameList)
 d1.view()
 print("QED\n")
 

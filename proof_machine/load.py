@@ -14,12 +14,12 @@ exec(open('objClass//classDerivation.py').read())
 exec(open('objClass//classEquation.py').read())
 exec(open('objClass//classTree.py').read())
 exec(open('factory//expressionAnalysis.py').read())
-exec(open('functionDict.py').read())
 exec(open('util.py').read())
 
 parenthesesList = ['{', '[', '(', ')', ']', '}']
-unaryFunctionList = ['E', 'I', 'P', 'exp', 'log', 'cup_i', 'sum_i', 'prod_i', 'sqrt', 'abs']
-binaryOpList = ['+', '-', '*', '/', '^', '<', '>', '<=', '>=', '=', '=>', 'cup', 'cap']
+unaryFunctionList = ['E', 'I', 'P', 'exp', 'log', 'cup_i', 'sum_i', 'prod_i', 'sqrt', 'abs', 'cplm', \
+					'd_dx', 'f', 'norm', 'sup', 'inf', 'limsup', 'liminf']
+binaryOpList = ['+', '-', '*', '/', '^', '<', '>', '<=', '>=', '=', '=>', 'cup', 'cap', 'setDiff', 'symSetDiff', '|', ',']
 import string
 variableList = list(string.digits) + list(string.ascii_lowercase) + list(string.ascii_uppercase)
 
@@ -32,3 +32,9 @@ typeDict = buildTypeDict(opList, parenthesesList, unaryFunctionList, binaryOpLis
 
 # File that uses parseTree
 exec(open('inequality.py').read())
+exec(open('lib/setOperations.py').read())
+exec(open('lib/expectations.py').read())
+exec(open('lib/probabilityMeasure.py').read())
+exec(open('functionDict.py').read())
+
+funList = [funDict[x] for x in funDict]

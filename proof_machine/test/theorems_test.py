@@ -45,30 +45,30 @@ print('End\n')
 # Unit test
 print("Unit test for autoDerive")
 d1 = Derivation(mainExpr)
-funList = [inclusionExclusion, rightPushIn, symmetry, backwardAssociativeCup, backwardAssociativeCap, \
-			forwardAssociativeCup, forwardAssociativeCap, invariant, symmetry]
+funList = [inclusionExclusion, rightPushIn, symmetry, cupBackwardAssociative, capBackwardAssociative, \
+			cupForwardAssociative, capForwardAssociative, invariant, symmetry, cupSimplify, capSimplify]
 
-print("Depth and Randomised")
+print("Depth, randomised and unsupervised")
 d1 = Derivation(mainExpr)
 d1.blindDerive(funList, 3, quiet = True)
 d1.view()
 
-print("Breadth and supervised")
+# print("Breadth, supervised")
+# d1 = Derivation(mainExpr)
+# d1.semiAutoDerive(funList, quiet = True)
+# d1.view()
+
+print("Breadth, unsupervised")
 d1 = Derivation(mainExpr)
-d1.semiAutoDerive(funList, quiet = True)
-d1.view()
+targetExpr = parseTree("( ( ( ( ( ( I A + I B ) + I C ) - I ( A cap B ) ) - I ( A cap C ) ) - I ( B cap C ) ) + I ( ( A cap B ) cap C ) )")
+d1.autoDerive(targetExpr, funList, 10, quiet = True)
+print('End\n')
 
 
 # # Unit test
-# print("Unit test for upper bound of indicators.")
-# expr = parseTree("I cup_i A_i")
-# eq = Equation(expr, "<=", indicatorSumUpperBound(expr))
-# eq.view()
+# print("Unit test for analytic expression")
+# expr = parseTree('f x')
+# taylor(expr).view()
 
-# Unit test
-# print("Unit test for associative law")
-# expr2 = parseTree(" ( ( A cup B ) cup C ) ")
-# d2 = Derivation(expr2)
-# d2.derive(forwardAssociative)
-# d2.derive(symmetry)
-# d2.view()
+# expr = parseTree('( g * h )')
+# differentiate(expr).view()
