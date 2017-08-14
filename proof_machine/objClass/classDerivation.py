@@ -67,10 +67,13 @@ class Derivation:
 			else:
 				continue
 
-	# def autoDerive(self, funList, steps = 5, quiet = True):
-	# 	for i in range(steps):
-	# 		self.exprList += deriveNewExpr(self.exprList[-1], funList, quiet)
-	# 	return self
+	def autoDerive(self, targetTree, funList, steps = 5, quiet = True):
+		for i in range(steps):
+			current = self.exprList[-1]
+			print(ifelse(i == 0, "", "= ") + treeToString(current))
+			newList = removeDuplication(deriveNewExpr(current, funList, quiet))
+			self.exprList.append(minDiffTree(targetTree, newList))
+		print("Difference score of the final expression and the target expression: " + str(treeDiff(self.exprList[-1], targetTree)))
 
 def autoDeriveBreadth(deriveObj, funList, steps = 5, quiet = True):
 	fullList = [ [0, deriveObj.exprList[-1]] ]
