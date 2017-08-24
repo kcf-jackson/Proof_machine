@@ -73,6 +73,8 @@ class Derivation:
 			print(ifelse(i == 0, "", "= ") + treeToString(current))
 			newList = removeDuplication(deriveNewExpr(current, funList, quiet))
 			self.exprList.append(minDiffTree(targetTree, newList))
+			if treeDiff(self.exprList[-1], targetTree) == 0:
+				break
 		print("Difference score of the final expression and the target expression: " + str(treeDiff(self.exprList[-1], targetTree)))
 
 def autoDeriveBreadth(deriveObj, funList, steps = 5, quiet = True):
