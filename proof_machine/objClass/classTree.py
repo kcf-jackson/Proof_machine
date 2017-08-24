@@ -9,6 +9,9 @@ class Node:
     def __eq__(self, other):
         return self.value == other.value and self.mathType == other.mathType and self.state == other.state
 
+    def view(self):
+        print("Content: {}, Type: {}, State: {}".format(self.value, self.mathType, self.state))
+
 class BinaryTree:
     def __init__(self,rootObj):
         self.key = rootObj
@@ -102,7 +105,7 @@ class BinaryTree:
 
     # def __radd__(self, l):
 
-def buildParseTree(fpexp, unaryOpList, binaryOpList):
+def buildParseTree(fpexp, unaryOpList, binaryOpList, symbolStateDict = {}):
     tokenList = fpexp.split()   # Expression to be parsed
     exprTree = BinaryTree('')   # Expression Tree
     parentStack = Stack()       # Keep track of the parent node
@@ -137,7 +140,11 @@ def buildParseTree(fpexp, unaryOpList, binaryOpList):
             currentTree = currentTree.getRightChild()
         elif i not in binaryOpList and i not in parenthesesList[3:6]:
             # if it is a constant or symbol (leaf)
-            currentTree.setRootNode(Node(i, 'symbol'))
+            if i in symbolStateDict:
+                symNode = Node(i, 'symbol', symbolStateDict[i])
+            else:
+                symNode = Node(i, 'symbol')
+            currentTree.setRootNode(symNode)
             currentTree = parentStack.pop()  # move up one level
             while currentTree.getRootNodeType() == 'function' and not parentStack.isEmpty():
                     currentTree = parentStack.pop()
