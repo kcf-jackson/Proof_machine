@@ -24,10 +24,10 @@ import string
 variableList = list(string.digits) + list(string.ascii_lowercase) + list(string.ascii_uppercase)
 
 opList = parenthesesList + unaryFunctionList + binaryOpList + variableList
-# variableState = {'a': ['constant'], 'b': ['constant'], 'X': ['random variable'], 'I': ['function']}
+variableState = {'a': ['constant'], 'b': ['constant'], 'X': ['random variable'], 'Y': ['random variable'], 'I': ['function']}
 
 # Functions that require initialisation
-parseTree = partial(buildParseTree, unaryOpList = parenthesesList + unaryFunctionList, binaryOpList = binaryOpList)
+parseTree = partial(buildParseTree, unaryOpList = parenthesesList + unaryFunctionList, binaryOpList = binaryOpList, symbolStateDict = variableState)
 typeDict = buildTypeDict(opList, parenthesesList, unaryFunctionList, binaryOpList, variableList)
 
 # File that uses parseTree
@@ -35,6 +35,6 @@ exec(open('inequality.py').read())
 exec(open('lib/setOperations.py').read())
 exec(open('lib/expectations.py').read())
 exec(open('lib/probabilityMeasure.py').read())
-exec(open('functionDict.py').read())
+# exec(open('functionDict.py').read())
 
-funList = [funDict[x] for x in funDict]
+# funList = [funDict[x] for x in funDict]

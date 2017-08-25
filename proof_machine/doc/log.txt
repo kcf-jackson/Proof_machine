@@ -1,10 +1,36 @@
+expression parser:
+- symbols, functions, operators and parentheses
+-- symbols
+-- functions are unary operators
+-- operators are binary operators
+** Should I include n-ary functions?
+-- parentheses: ['{', '[', '(', ')', ']', '}']
+
+
+manipulation:
+- symbols, operators and parentheses
+-- symbols:
+--- constants
+--- random variables / measurable functions
+-- operators:
+--- function is unary
+    List: ['E', 'I', 'P', 'exp', 'log', 'cup_i', 'sum_i', 'prod_i', 'sqrt', 'abs', 'cplm', \
+					'D', 'f', 'norm', 'sup', 'inf', 'limsup', 'liminf']
+--- operators are binary
+    List: ['+', '-', '*', '/', '^', '<', '>', '<=', '>=', '=', '=>', 'cup', 'cap', 'setDiff', 'symSetDiff', '|', ',']
+--- Should I include n-ary functions?
+
+-- parentheses
+   List: ['{', '[', '(', ')', ']', '}']
+
+
 objects:
 - constant
-- random variable
+- random variable / measurable function
 - set (for probability)
 - interval
 - functions
-- 
+-
 
 operations:
 - expectation
@@ -23,11 +49,28 @@ Bounded-difference
 sub-gaussian
 
 Todo:
+Problem in order:
+- prefix to postfix and postfix natural notation
+- state variables
+    + This requires a new module handling the namespace. This is done in classVariable.py.
+    Next step is to integrate it with TreeParser and MapBuilder. You probably need some experimentation with some functions.
+- more general tree mapping creators
+    + allow additional input
+    + allow state variable signature
+        * state variables is implemented, but the problem is treeMapping only checks the state of the parent variables, not children. This require state inference for operators and functions.
+
+Key and difficult challenges
+- theorem prover (decomposition)
+- example creator
+- type class proof
+- add more theorems
+
+
 Linear operator (factory)
 Real numbers
-
-- Simplify function: (+, -), (*, /), (^, ^), (exp, log) 
-    - factorising 
+Function should have description (use dictionary) and equality / inequality label
+- Simplify function: (+, -), (*, /), (^, ^), (exp, log)
+    - factorising
     - grouping index
     - expanding
     - cancel out
@@ -46,8 +89,8 @@ Filelist
 - classNode.py: Node class and BinaryTree class
 - exprTree.py: 'buildParseTree' function
 - classEquation.py: Equation class
-- exprTreeMethods.py: 
-- main.py: 
+- exprTreeMethods.py:
+- main.py:
 
 basicTreePattern:
 genericTreePattern:
@@ -75,6 +118,3 @@ assoiciativeLaw.py: forwardAssociative, backwardAssociative
 inequality.py: cauchySchwarz
 codeTree.py: LRcodeToBaseThreeCode, baseThreeCodeToLRcode, LRcodeToTree, baseThreeCodeToTree
 operatorRelation.py: invariant, symmetry, tautology
-
-
-

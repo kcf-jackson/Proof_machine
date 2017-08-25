@@ -34,12 +34,12 @@ print("Unit test for treeToNodes and relabelTree")
 tree1 = LRcodeToTree("LL0LR0R0")
 nodeList = treeToNodes(tree1)
 for node in nodeList:
-	print(node.value + ' ' + node.mathType)
+	print(node.value + ' ' + node.ptype)
 
 tree2 = relabelTree(LRcodeToTree("LL0LR0R0"), nodeList[::-1])
 nodeList = treeToNodes(tree2)
 for node in nodeList:
-	print(node.value + ' ' + node.mathType)
+	print(node.value + ' ' + node.ptype)
 print("End\n")
 
 
@@ -47,12 +47,12 @@ print("End\n")
 # tree3 = LRcodeToTree("L0R0")
 # nodeList = treeToNodes(tree3)
 # for node in nodeList:
-# 	print(node.value + ' ' + node.mathType)
+# 	print(node.value + ' ' + node.ptype)
 
 # tree4 = genericTreeMapping(tree3, treeMapCode = '200', nodesDict = {1:3, 2:4, 3:1}, addNodesList = [Node('new', 'symbol')])
 # nodeList = treeToNodes(tree4)
 # for node in nodeList:
-# 	print(node.value + ' ' + node.mathType)
+# 	print(node.value + ' ' + node.ptype)
 # print("End\n")
 
 

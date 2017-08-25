@@ -1,4 +1,7 @@
 # Set operation
+globalVariables.modifyVariableState(['A', 'B', 'C'], ['set'])
+
+# Function definitions
 inclusionExclusion = buildTreeMapping('I ( A cup B )', '( ( I A + I B ) - I ( A cap B ) )')
 
 cupForwardAssociative = buildTreeMapping('( ( A cup B ) cup C )', '( A cup ( B cup C ) )')

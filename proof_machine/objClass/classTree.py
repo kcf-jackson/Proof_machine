@@ -1,16 +1,16 @@
 from pythonds.basic.stack import Stack
 
 class Node:
-    def __init__(self, value = None, mathType = None, state = None):
+    def __init__(self, value = None, ptype = None, state = None):
         self.value = value
-        self.mathType = mathType 
+        self.ptype = ptype 
         self.state = state
 
     def __eq__(self, other):
-        return self.value == other.value and self.mathType == other.mathType and self.state == other.state
+        return self.value == other.value and self.ptype == other.ptype and self.state == other.state
 
     def view(self):
-        print("Content: {}, Type: {}, State: {}".format(self.value, self.mathType, self.state))
+        print("Content: {}, Type: {}, State: {}".format(self.value, self.ptype, self.state))
 
 class BinaryTree:
     def __init__(self,rootObj):
@@ -86,7 +86,7 @@ class BinaryTree:
         return self.key.value
 
     def getRootNodeType(self):
-        return self.key.mathType
+        return self.key.ptype
 
     def getRootNodeState(self):
         return self.key.state
@@ -104,74 +104,3 @@ class BinaryTree:
     #     return res
 
     # def __radd__(self, l):
-
-def buildParseTree(fpexp, unaryOpList, binaryOpList, symbolStateDict = {}):
-    tokenList = fpexp.split()   # Expression to be parsed
-    exprTree = BinaryTree('')   # Expression Tree
-    parentStack = Stack()       # Keep track of the parent node
-    parentStack.push(exprTree)  
-
-    parenthesesList = unaryOpList[0:6]
-    currentTree = exprTree
-    for ind, i in enumerate(tokenList):
-        if i in unaryOpList:
-            if i in parenthesesList[0:3]:
-            # if it is an open parentheses
-                currentTree.setRootNode(Node(i, 'parentheses')) 
-                currentTree.insertLeft('')
-                parentStack.push(currentTree)
-                currentTree = currentTree.getLeftChild()
-            elif i in unaryFunctionList:
-            # if it is an unary function
-                currentTree.setRootNode(Node(i, 'function'))
-                currentTree.insertLeft('')
-                parentStack.push(currentTree)
-                currentTree = currentTree.getLeftChild()        
-            elif i in parenthesesList[3:6]:
-            # if it is a close parentheses
-                currentTree = parentStack.pop()
-                while currentTree.getRootNodeType() == 'function' and not parentStack.isEmpty():
-                    currentTree = parentStack.pop()
-        elif i in binaryOpList:
-            # if it is an binary operator
-            currentTree.setRootNode(Node(i, 'operator'))
-            currentTree.insertRight('')
-            parentStack.push(currentTree)
-            currentTree = currentTree.getRightChild()
-        elif i not in binaryOpList and i not in parenthesesList[3:6]:
-            # if it is a constant or symbol (leaf)
-            if i in symbolStateDict:
-                symNode = Node(i, 'symbol', symbolStateDict[i])
-            else:
-                symNode = Node(i, 'symbol')
-            currentTree.setRootNode(symNode)
-            currentTree = parentStack.pop()  # move up one level
-            while currentTree.getRootNodeType() == 'function' and not parentStack.isEmpty():
-                    currentTree = parentStack.pop()
-        else:
-            raise ValueError
-    return exprTree
-
-def treeToString(tree):
-    sVal = ""
-    if tree.getRootNodeType() == 'function':
-        return str(tree.getRootNodeValue()) + ' ' + treeToString(tree.getLeftChild())
-    elif tree.getRootNodeType() == 'symbol':
-        return str(tree.getRootNodeValue())
-    elif tree.getRootNodeType() == 'operator':
-        return '( ' + treeToString(tree.getLeftChild()) + ' ' + str(tree.getRootNodeValue()) + ' ' + treeToString(tree.getRightChild())+ ' )'
-    elif tree.getRootNodeType() == 'parentheses':
-        return '( ' + treeToString(tree.getLeftChild()) + ' )'
-
-def printFullTree(tree, level = 0):
-  print("  " * level + tree.getRootNodeValue() + ' ' + tree.getRootNodeType())
-  if tree.getLeftChild() != None:
-    printFullTree(tree.getLeftChild(), level + 1)
-  if tree.getRightChild() != None:
-    printFullTree(tree.getRightChild(), level + 1)
-
-def combineTwoTrees(tree1, tree2, node):
-    res = BinaryTree(node)
-    res.insertLeft(tree1)
-    res.insertRight(tree2)
-    return res

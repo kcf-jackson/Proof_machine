@@ -1,7 +1,7 @@
 class Variable:
 	def __init__(self, name, ptype = 'symbol', state = None, latex = None):
 		self.name = name
-		self.type = ptype
+		self.ptype = ptype
 		if state != None and getClass(state) != 'list':
 			raise ValueError("state must be of type 'list'.")
 		self.state = state
@@ -12,14 +12,14 @@ class Variable:
 
 	def modify(self, attr, newValue):
 		if attr not in ['name', 'type', 'state', 'latex']:
-			raise ValueError(attr + "is not a value attributes. It must be one of 'name', 'type', 'state' and 'latex'.")
+			raise ValueError(attr + "is not a valid attribute. It must be one of 'name', 'type', 'state' and 'latex'.")
 		else:
 			self[attr] = newValue
 
 	def View(self):
 		stateStr = '' if self.state == None else ", ".join(self.state)
 		latexStr = '' if self.latex == None else self.latex
-		print("{:>15} \t {:>12} \t {:>15} \t {:>12}".format(self.name, self.type, stateStr, latexStr))
+		print("{:>15} \t {:>12} \t {:>15} \t {:>12}".format(self.name, self.ptype, stateStr, latexStr))
 
 class Namespace:
 	def __init__(self):
@@ -47,6 +47,11 @@ class Namespace:
 			for var in self.variableList:
 				if var.name == varName:
 					var.modify(attr, newValue)
+
+	def findVariable(self, varName):
+		for x in self.variableList:
+			if x.name == varName:
+				return x
 
 	def isExist(self, varName):
 		any([x.name == varName for x in self.variableList])

@@ -80,67 +80,32 @@ def rightPullOut(tree):
 	return tree
 
 # Exponential function
-def pushInExp(tree):
+def pushInFun(tree, fun, mapDict):
 	#e^(a+b) = e^a * e^b
-	if tree.getRootNodeValue() == 'exp':
+	if tree.getRootNodeValue() == fun:
 		parentOp = tree.getLeftChild().getRootNodeValue()
-		if parentOp == '+':
-			targetLayer1Node = Node('*', 'operator')
-			targetLayer2Node = Node('exp', 'function')
-		elif parentOp == '-':
-			targetLayer1Node = Node('/', 'operator')
-			targetLayer2Node = Node('exp', 'function')
-		else:
-			return tree
-		return oneOneVerticalToOneTwoVertical(tree, targetLayer1Node, targetLayer2Node)
+		if parentOp in mapDict:
+			targetLayer1Node = Node(mapDict[parentOp], 'operator')
+			targetLayer2Node = Node(fun, 'function')
+			return oneOneVerticalToOneTwoVertical(tree, targetLayer1Node, targetLayer2Node)
 	return tree
 
-def pullOutExp(tree):
+from functools import partial
+pushInExp = partial(pushInFun, fun = 'exp', mapDict = {'+': '*', '-': '/'})
+pushInLog = partial(pushInFun, fun = 'log', mapDict = {'*': '+', '/': '-'})
+
+def pullOutFun(tree, fun, mapDict):
 	#e^a * e^b = e^(a+b)
 	parentOp = tree.getRootNodeValue()
-	if tree.getLeftChildValue() == 'exp' and tree.getLeftChildValue() == tree.getRightChildValue():
-		if parentOp == '*':
-			targetLayer1Node = Node('exp', 'function')
-			targetLayer2Node = Node('+', 'operator')
-		elif parentOp == '/':
-			targetLayer1Node = Node('exp', 'function')
-			targetLayer2Node = Node('-', 'operator')
-		else:
-			return tree
-		return oneTwoVerticalToOneOneVertical(tree, targetLayer1Node, targetLayer2Node)
+	if tree.getLeftChildValue() == fun and tree.getLeftChildValue() == tree.getRightChildValue():
+		if parentOp in mapDict:
+			targetLayer1Node = Node(fun, 'function')
+			targetLayer2Node = Node(mapDict[parentOp], 'operator')
+			return oneTwoVerticalToOneOneVertical(tree, targetLayer1Node, targetLayer2Node)
 	return tree
 
-# Logarithmic function
-def pushInLog(tree):
-	# log (ab) = log a + log b
-	if tree.getRootNodeValue() == 'log':
-		parentOp = tree.getLeftChild().getRootNodeValue()
-		if parentOp == '*':
-			targetLayer1Node = Node('+', 'operator')
-			targetLayer2Node = Node('log', 'function')
-		elif parentOp == '/':
-			targetLayer1Node = Node('-', 'operator')
-			targetLayer2Node = Node('log', 'function')
-		else:
-			return tree
-		return oneOneVerticalToOneTwoVertical(tree, targetLayer1Node, targetLayer2Node)
-	return tree
-
-def pullOutLog(tree):
-	# log a + log b = log (ab)
-	parentOp = tree.getRootNodeValue()
-	if tree.getLeftChildValue() == 'log' and tree.getLeftChildValue() == tree.getRightChildValue():
-		if parentOp == '+':
-			targetLayer1Node = Node('log', 'function')
-			targetLayer2Node = Node('*', 'operator')
-		elif parentOp == '-':
-			targetLayer1Node = Node('log', 'function')
-			targetLayer2Node = Node('/', 'operator')
-		else:
-			return tree
-		return oneTwoVerticalToOneOneVertical(tree, targetLayer1Node, targetLayer2Node)
-	else:
-		return tree
+pullOutExp = partial(pullOutFun, fun = 'exp', mapDict = {'*': '+', '/': '-'})
+pullOutLog = partial(pullOutFun, fun = 'log', mapDict = {'+': '*', '-': '/'})
 
 # Linearity 
 def functional_distribute(tree, funSym, variableState):

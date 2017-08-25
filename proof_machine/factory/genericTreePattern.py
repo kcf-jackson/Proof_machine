@@ -1,9 +1,8 @@
 from pythonds.basic.queue import Queue
 
 # Tree decomposition
-def safeGuardedTreeMapping(nodesCheckList, nodesList, treeMapCode, nodesDict):
-	
-	return genericTreeMapping(nodesList, treeMapCode, nodesDict)
+# def safeGuardedTreeMapping(nodesCheckList, nodesList, treeMapCode, nodesDict):
+# 	return genericTreeMapping(nodesList, treeMapCode, nodesDict)
 
 def genericTreeMapping(nodesList, treeMapCode, nodesDict):
 	targetNodesList = mapNodes(nodesList, nodesDict)
@@ -47,11 +46,11 @@ def treeToNodes(tree, nodeTreeIndicator = []):
 	return res	
 
 # This function modifies a nodesList
-def nodesTransform(nodesList, pos, modifyList):
-	if modifyList != []:
-		for ind, node in enumerate(modifyList):
-			nodesList[pos[ind] - 1] = node
-	return nodesList
+# def nodesTransform(nodesList, pos, modifyList):
+# 	if modifyList != []:
+# 		for ind, node in enumerate(modifyList):
+# 			nodesList[pos[ind] - 1] = node
+# 	return nodesList
 
 def mapNodes(nodesList, nodesDict):
 	resList = []

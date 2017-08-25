@@ -2,6 +2,7 @@
 def getAssociativeMapping():
 	import random
 	import math
+	res = []
 	sym = ['+', '-', '*', '/']
 	for op1 in sym:
 		for op2 in sym:
@@ -14,12 +15,19 @@ def getAssociativeMapping():
 					expr2 = "".join([a, op3, '(', b, op4, c, ')'])
 					if math.isclose(eval(expr1), eval(expr2)):
 						# print("".join([expr1, '=', expr2]))
-						print("('{:s}', '{:s}') : ('{:s}', '{:s}')".format(op1, op2, op3, op4))
+						resExpr1 = " ".join(['( (', 'a', op1, 'b', ')', op2, 'c )'])
+						resExpr2 = " ".join(['( a', op3, '(', 'b', op4, 'c', ') )'])
+						res.append([resExpr1, resExpr2])
+						# print("('{:s}', '{:s}') : ('{:s}', '{:s}')".format(op1, op2, op3, op4))
+	res = res + list(map(lambda x: x[::-1], res))
+	print("Generated Arithmetric - Associative law - " + str(len(res)) + " examples.")
+	return res
 
 # Generate mapping for distributive Dict
 def getLeftDistributiveMapping():
 	import random
 	import math
+	res = []
 	sym = ['+', '-', '*', '/']
 	for op1 in sym:
 		for op2 in sym:
@@ -30,11 +38,17 @@ def getLeftDistributiveMapping():
 			expr2 = "".join(['(', a, op1, b, ')', op2, '(', a, op1, c, ')'])
 			if math.isclose(eval(expr1), eval(expr2)):
 				# print("".join([expr1, '=', expr2]))
-				print("('{:s}', '{:s}')".format(op1, op2))
+				# print("('{:s}', '{:s}')".format(op1, op2))
+				resExpr1 = " ".join(['( a', op1, '(', 'b', op2, 'c', ') )'])
+				resExpr2 = " ".join(['( ( a ', op1, 'b )', op2, '( a', op1, 'c ) )'])
+				res.append([resExpr1, resExpr2])
+	print("Generated Arithmetric - Left distributive law - " + str(len(res)) + " examples.")
+	return res
 
 def getRightDistributiveMapping():
 	import random
 	import math
+	res = []
 	sym = ['+', '-', '*', '/']
 	for op1 in sym:
 		for op2 in sym:
@@ -45,11 +59,18 @@ def getRightDistributiveMapping():
 			expr2 = "".join(['(', a, op2, c, ')', op1, '(', b, op2, c, ')'])
 			if math.isclose(eval(expr1), eval(expr2)):
 				# print("".join([expr1, '=', expr2]))
-				print("('{:s}', '{:s}')".format(op1, op2))
+				# print("('{:s}', '{:s}')".format(op1, op2))
+				resExpr1 = " ".join(['( (', 'a', op1, 'b', ')', op2, 'c )'])
+				resExpr2 = " ".join(['( (', 'a', op2, 'c', ')', op1, '(', 'b', op2, 'c', ')'])
+				res.append([resExpr1, resExpr2])
+	print("Generated Arithmetric - Right distributive law - " + str(len(res)) + " examples.")
+	return res
 
 print("Associative")
-getAssociativeMapping()
+[print(x) for x in getAssociativeMapping()]
 print("Left distributive:")
-getLeftDistributiveMapping()
+[print(x) for x in getLeftDistributiveMapping()]
 print("Right distributive:")
-getRightDistributiveMapping()
+[print(x) for x in getRightDistributiveMapping()]
+
+
