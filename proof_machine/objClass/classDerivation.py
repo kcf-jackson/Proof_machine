@@ -39,7 +39,7 @@ class Derivation:
 			treeList = getAllParents(self.exprList[-1])
 			for subTree in treeList:
 				l = len(funList)
-				rind = ifelse(randomized, random.sample(list(range(l)), l), list(range(l)))
+				rind = random.sample(list(range(l)), l) if randomized else list(range(l))
 				for ind in rind:
 					fun = funList[ind]
 					transformedTree = fun(subTree)
@@ -70,7 +70,7 @@ class Derivation:
 	def autoDerive(self, targetTree, funList, steps = 5, quiet = True):
 		for i in range(steps):
 			current = self.exprList[-1]
-			print(ifelse(i == 0, "", "= ") + treeToString(current))
+			print(("" if i == 0 else "= ") + treeToString(current))
 			newList = removeDuplication(deriveNewExpr(current, funList, quiet))
 			self.exprList.append(minDiffTree(targetTree, newList))
 			if treeDiff(self.exprList[-1], targetTree) == 0:

@@ -7,6 +7,10 @@ def buildParseTree(fpexp, namespace):
     currentTree = exprTree
     for ind, i in enumerate(tokenList):
         varParseType = lookupPtype(i, namespace)
+        if varParseType == 'undefined':
+            if isfloat(i):
+                namespace.defineVariable('symbol', i)
+                varParseType = lookupPtype(i, namespace)
         # Add nodes and move down/right the tree
         if varParseType == 'function':
             currentTree.setRootNode(Node(i, 'function'))
@@ -34,7 +38,7 @@ def buildParseTree(fpexp, namespace):
             while currentTree.getRootNodeType() == 'function' and not parentStack.isEmpty():
                 currentTree = parentStack.pop()
         else:
-            raise ValueError("Wrong parse type for variable " + i + ". Must be 'function', 'operator', 'symbol' or 'parentheses'.")
+            raise ValueError("Variable " + i + " has wrong parse type: "+ varParseType + ". Must be 'function', 'operator', 'symbol' or 'parentheses'.")
             
     return exprTree
 
@@ -56,19 +60,20 @@ def printFullTree(tree, level = 0):
   if tree.getRightChild() != None:
     printFullTree(tree.getRightChild(), level + 1)
 
-def infixToPostfix(infixexpr, namespace):
-    # note that functions" have higher precedence than all the operators.
-    prec = {"^": 4, "*": 3, "/": 3, "+": 2, "-": 2, '<': 1, '>': 1, '<=': 1, '>=': 1, '=': 1, "(": 0}
+
+def infixToPostfix(expr, namespace):
+    prec = precTable()
     opStack = Stack()
     postfixList = []
-    tokenList = infixexpr.split()
+    tokenList = expr.split()
 
     for token in tokenList:
         # symbol
-        if token in "ABCDEFGHIJKLMNOPQRSTUVWXYZ" or token in "0123456789":
+        tokenPtype = lookupPtype(token, namespace)
+        if tokenPtype == 'symbol':
             postfixList.append(token)
         # parentheses
-        elif token == '(' or lookupPtype(token, namespace) == 'function':
+        elif token == '(' or tokenPtype == 'function':
             opStack.push(token)
             if token not in prec:
                 prec[token] = 0
@@ -91,19 +96,75 @@ def infixToPostfix(infixexpr, namespace):
         postfixList.append(opStack.pop())
     return " ".join(postfixList)
 
-# print(infixToPostfix("A * B + C * D"))
-# print(infixToPostfix("( A + B ) * C - ( D - E ) * ( F + G )"))
+def postfixToInfix(expr, namespace):
+    prec = precTable()
+    symbolStack = Stack()
+    infixStr = ''
+    tokenList = expr.split()
 
+    for token in tokenList:
+        tokenPtype = lookupPtype(token, namespace)
+        if tokenPtype == 'symbol':
+            symbolStack.push(token)
+        elif tokenPtype == 'operator':
+            right = symbolStack.pop()
+            left = symbolStack.pop()
+            symbolStack.push(" ".join(['(', left, token, right, ')']))
+        elif tokenPtype == 'function':
+            center = symbolStack.pop()
+            symbolStack.push(" ".join([token, '(', center, ')']))
+        else:
+            raise ValueError(token + " has the wrong parse type.")
 
-# def postfixToInfix(expr):
+    if symbolStack.size() == 1:
+        return symbolStack.pop()
+    else:
+        raise ValueError("Final outcome doesn't have size 1.")
+
+def postfixToInfixSimplified(expr, namespace):
+    prec = precTable()
+    symbolStack = Stack()
+    precStack = Stack()
+    infixStr = ''
+    tokenList = expr.split()
+
+    for token in tokenList:
+        tokenPtype = lookupPtype(token, namespace)
+        if tokenPtype == 'symbol':
+            symbolStack.push(token)
+            precStack.push(100)
+        elif tokenPtype == 'operator':
+            right = symbolStack.pop()
+            left = symbolStack.pop()
+            
+            tokenPrec = prec[token]
+            rightPrec = precStack.pop()
+            leftPrec = precStack.pop()
+            if leftPrec < tokenPrec:
+                left = '( ' + left + ' )'    
+            if rightPrec <= tokenPrec:
+                right = '( ' + right + ' )'  
+            precStack.push(prec[token])
+            
+            symbolStack.push(" ".join([left, token, right]))
+        elif tokenPtype == 'function':
+            if token not in prec:
+                prec[token] = 0
+            precStack.pop()
+            precStack.push(100)
+            center = symbolStack.pop()
+            symbolStack.push(" ".join([token, '(', center, ')']))
+        else:
+            raise ValueError(token + " has the wrong parse type.")
+
+    if symbolStack.size() == 1:
+        return symbolStack.pop()
+    else:
+        raise ValueError("Final outcome doesn't have size 1.")
+
 
 # def combineTwoTrees(tree1, tree2, node):
 #     res = BinaryTree(node)
 #     res.insertLeft(tree1)
 #     res.insertRight(tree2)
 #     return res
-
-# Helper functions
-def lookupPtype(varName, namespace):
-    res = namespace.findVariable(varName)
-    return res.ptype if res else ''

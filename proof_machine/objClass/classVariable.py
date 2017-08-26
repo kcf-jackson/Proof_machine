@@ -11,10 +11,10 @@ class Variable:
 			self.latex = latex
 
 	def modify(self, attr, newValue):
-		if attr not in ['name', 'type', 'state', 'latex']:
-			raise ValueError(attr + "is not a valid attribute. It must be one of 'name', 'type', 'state' and 'latex'.")
+		if attr not in ['name', 'ptype', 'state', 'latex']:
+			raise ValueError(attr + " is not a valid attribute. It must be one of 'name', 'ptype', 'state' and 'latex'.")
 		else:
-			self[attr] = newValue
+			setattr(self, attr, newValue)
 
 	def View(self):
 		stateStr = '' if self.state == None else ", ".join(self.state)
@@ -27,12 +27,17 @@ class Namespace:
 		self.addDefault()
 
 	def addDefault(self):
-		self.defineVariable('parentheses', ['{', '[', '(', ')', ']', '}'])
+		self.defineVariable('parentheses', defaultNamespace()['parentheses'])
+		self.defineVariable('operator', defaultNamespace()['arithmeticOperator'])
+		self.defineVariable('operator', defaultNamespace()['setOperator'])
 
 	def defineVariable(self, ptype, varName):
 		# Interface to handle list input or single input.
-		for var in varName:	
-			self.addVariable(Variable(var, ptype))
+		if varName.__class__.__name__ == 'list':
+			for var in varName:	
+				self.addVariable(Variable(var, ptype))
+		else:
+			self.addVariable(Variable(varName, ptype))
 	
 	def addVariable(self, newVariable):
 		if self.isExist(newVariable.name):
@@ -41,7 +46,7 @@ class Namespace:
 			self.variableList.append(newVariable)
 
 	def modifyVariable(self, varName, attr, newValue):
-		if not isExist(newVariable):
+		if not self.isExist(varName):
 			raise ValueError("Cannot modify a variable that doesn't exist.")
 		else:
 			for var in self.variableList:
@@ -54,9 +59,14 @@ class Namespace:
 				return x
 
 	def isExist(self, varName):
-		any([x.name == varName for x in self.variableList])
+		return any([x.name == varName for x in self.variableList])
 
 	def View(self):
 		print("{:>15} \t {:>12} \t {:>15} \t {:>12}".format("Variable", "Parse type", "State", "Latex"))
 		for var in self.variableList:
 			var.View() 
+
+# Helper functions
+def lookupPtype(varName, namespace):
+    res = namespace.findVariable(varName)
+    return res.ptype if res else 'undefined'
