@@ -1,3 +1,7 @@
+from pythonds.basic.stack import Stack
+from proof_machine.others import precTable, isfloat
+from proof_machine.objClass import lookupPtype, BinaryTree, Node
+
 def buildParseTree(fpexp, namespace):
     tokenList = fpexp.split()   # Expression to be parsed
     exprTree = BinaryTree('')   # Expression Tree
@@ -41,25 +45,6 @@ def buildParseTree(fpexp, namespace):
             raise ValueError("Variable " + i + " has wrong parse type: "+ varParseType + ". Must be 'function', 'operator', 'symbol' or 'parentheses'.")
             
     return exprTree
-
-def treeToString(tree):
-    sVal = ""
-    if tree.getRootNodeType() == 'function':
-        return str(tree.getRootNodeValue()) + ' ' + treeToString(tree.getLeftChild())
-    elif tree.getRootNodeType() == 'symbol':
-        return str(tree.getRootNodeValue())
-    elif tree.getRootNodeType() == 'operator':
-        return '( ' + treeToString(tree.getLeftChild()) + ' ' + str(tree.getRootNodeValue()) + ' ' + treeToString(tree.getRightChild())+ ' )'
-    elif tree.getRootNodeType() == 'parentheses':
-        return '( ' + treeToString(tree.getLeftChild()) + ' )'
-
-def printFullTree(tree, level = 0):
-  print("  " * level + tree.getRootNodeValue() + ' ' + tree.getRootNodeType())
-  if tree.getLeftChild() != None:
-    printFullTree(tree.getLeftChild(), level + 1)
-  if tree.getRightChild() != None:
-    printFullTree(tree.getRightChild(), level + 1)
-
 
 def infixToPostfix(expr, namespace):
     prec = precTable()
@@ -112,7 +97,8 @@ def postfixToInfix(expr, namespace):
             symbolStack.push(" ".join(['(', left, token, right, ')']))
         elif tokenPtype == 'function':
             center = symbolStack.pop()
-            symbolStack.push(" ".join([token, '(', center, ')']))
+            # symbolStack.push(" ".join([token, '(', center, ')']))
+            symbolStack.push(" ".join([token, center]))
         else:
             raise ValueError(token + " has the wrong parse type.")
 
@@ -162,9 +148,7 @@ def postfixToInfixSimplified(expr, namespace):
     else:
         raise ValueError("Final outcome doesn't have size 1.")
 
-
-# def combineTwoTrees(tree1, tree2, node):
-#     res = BinaryTree(node)
-#     res.insertLeft(tree1)
-#     res.insertRight(tree2)
-#     return res
+def parse(expr, globalVariables):
+    postfixExpr = infixToPostfix(expr, globalVariables)
+    fullInfixExpr = postfixToInfix(postfixExpr, globalVariables)
+    return buildParseTree(fullInfixExpr, globalVariables)
