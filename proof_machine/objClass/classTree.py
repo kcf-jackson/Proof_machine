@@ -1,15 +1,15 @@
 from pythonds.basic.stack import Stack
 
 class Node:
-    def __init__(self, value = None, ptype = None, state = None):
+    def __init__(self, value, ptype, state = ['']):
         self.value = value
         self.ptype = ptype 
         self.state = state
 
-    def __eq__(self, other):
+    def __eq__(self, other): 
         return self.value == other.value and self.ptype == other.ptype and self.state == other.state
 
-    def view(self):
+    def View(self):
         print("Content: {}, Type: {}, State: {}".format(self.value, self.ptype, self.state))
 
 class BinaryTree:
@@ -91,16 +91,23 @@ class BinaryTree:
     def getRootNodeState(self):
         return self.key.state
 
-    def view(self):
+    def View(self):
         print(treeToString(self))
 
-    # def __add__(self, r):
-    #     res = BinaryTree(Node("+", "operator"))
-    #     res.insertLeft(tree)
-    #     if getClass(r) in ["BinaryTree", "Node"]:
-    #         res.insertRight(r)
-    #     else
-    #         res.insertRight(Node(r, 'symbol'))
-    #     return res
+def treeToString(tree):
+    sVal = ""
+    if tree.getRootNodeType() == 'function':
+        return str(tree.getRootNodeValue()) + ' ' + treeToString(tree.getLeftChild())
+    elif tree.getRootNodeType() == 'symbol':
+        return str(tree.getRootNodeValue())
+    elif tree.getRootNodeType() == 'operator':
+        return '( ' + treeToString(tree.getLeftChild()) + ' ' + str(tree.getRootNodeValue()) + ' ' + treeToString(tree.getRightChild())+ ' )'
+    elif tree.getRootNodeType() == 'parentheses':
+        return '( ' + treeToString(tree.getLeftChild()) + ' )'
 
-    # def __radd__(self, l):
+def printFullTree(tree, level = 0):
+  print("  " * level + tree.getRootNodeValue() + ' ' + tree.getRootNodeType())
+  if tree.getLeftChild() != None:
+    printFullTree(tree.getLeftChild(), level + 1)
+  if tree.getRightChild() != None:
+    printFullTree(tree.getRightChild(), level + 1)

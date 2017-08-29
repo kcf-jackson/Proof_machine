@@ -1,3 +1,5 @@
+from proof_machine.others import dafaultNamespace, getClass
+
 class Variable:
 	def __init__(self, name, ptype = 'symbol', state = None, latex = None):
 		self.name = name
@@ -27,9 +29,9 @@ class Namespace:
 		self.addDefault()
 
 	def addDefault(self):
-		self.defineVariable('parentheses', defaultNamespace()['parentheses'])
-		self.defineVariable('operator', defaultNamespace()['arithmeticOperator'])
-		self.defineVariable('operator', defaultNamespace()['setOperator'])
+		self.defineVariable('parentheses', dafaultNamespace()['parentheses'])
+		self.defineVariable('operator', dafaultNamespace()['arithmeticOperator'])
+		self.defineVariable('operator', dafaultNamespace()['setOperator'])
 
 	def defineVariable(self, ptype, varName):
 		# Interface to handle list input or single input.
