@@ -5,52 +5,42 @@ from proof_machine.treeMap.treeEncoding import treeToBaseThreeCode, treeToLeaves
 from proof_machine.treeMap.genericTreePattern import treeToNodes, genericTreeMapping
 
 def buildTreeMapping(expr1, expr2, namespace):
-	material = expressionToGenericMapping(expr1, expr2, namespace)	
-	additionalNodes = list(map(lambda x: Node(x, lookupPtype(x, namespace)), material['extraSym']))
-	benchmarkSignature = subsetNodesList(material['srcNodesList'], material['leavesCode'])
-	def treeFunction(tree):
-		treeSignature = getTreeSignature(tree, material['leavesCode'])
-		signatureCheck = passTreeSignature(treeSignature, benchmarkSignature)
+	tree1 = buildParseTree(expr1, namespace)
+	tree2 = buildParseTree(expr2, namespace)
+	mapSpec = getNodesMapping(tree1, tree2)	
+	extraNodes = convertSymbolToNodes(mapSpec['extraSym'], namespace)
+	sourceSignature = getTreeSignature(tree1)
+	sourceTreeCode = treeToLeavesCode(tree1)
+	targetMapCode = treeToBaseThreeCode(tree2)
+	def treeFunction(tree, quiet = True):
+		treeSignature = getTreeSignature(tree)
+		signatureCheck = passTreeSignature(treeSignature, sourceSignature, quiet)
 		if signatureCheck:
-			# try:
-			nodesList = treeToNodes(tree, material['leavesCode']) + additionalNodes
-			nodesDict = material['mapDict']
-			res = genericTreeMapping(nodesList, material['treeMapCode'], nodesDict)
+			nodesList = treeToNodes(tree, sourceTreeCode) + extraNodes
+			res = genericTreeMapping(nodesList, targetMapCode, mapSpec['mapDict'])
 			return res
-			# except:
-				# return tree
 		else:
 			return tree
 	return treeFunction
 
-def expressionToGenericMapping(expr1, expr2, namespace, quiet = True):
-	a1 = expressionAnalysis(expr1, namespace)
-	a2 = expressionAnalysis(expr2, namespace)
-	a1Sym = a1['symbolList']
-	a2Sym = a2['symbolList']
+
+# Mapping between two trees
+def convertSymbolToNodes(symbolList, namespace):
+	return [Node(x, lookupPtype(x, namespace)) for x in symbolList]
+
+def getNodesMapping(tree1, tree2):
+	a1Sym = getSymbolList(tree1)
+	a2Sym = getSymbolList(tree2)
 	
 	extraSym = symDiff(a1Sym, a2Sym)
-	fullSym = a1Sym + extraSym
-	mapDict = findMapping(fullSym, a2Sym)
+	mapDict = findMapping(a1Sym + extraSym, a2Sym)
 
-	if not quiet:
-		print("Leaves code: " + str(a1['leavesCode']))
-		print("Symbol needed: " + ",".join(extraSym))
-		print("Full symbol list: " + ",".join(fullSym))
-		print("Dictionary:")
-		print(mapDict)
-		print("Tree code: " + str(a2['treeCode']))
-	return {'srcNodesList': a1['nodesList'], 'leavesCode': a1['leavesCode'], 'extraSym': extraSym, \
-			'fullSym': fullSym, 'treeMapCode': a2['treeCode'], 'mapDict': mapDict}
+	return {'extraSym': extraSym, 'mapDict': mapDict}
 
-# Analyse an expression and decompose into 'tree, codes, nodesList, symList'
-def expressionAnalysis(expr1, namespace):
-	tree = buildParseTree(expr1, namespace)
-	treeCode = treeToBaseThreeCode(tree)
-	leavesCode = treeToLeavesCode(tree)
+def getSymbolList(tree):
 	nodesList = treeToNodes(tree)
-	symList = list(map(lambda x: x.value, nodesList))
-	return {'tree': tree, 'treeCode': treeCode, 'leavesCode': leavesCode, 'nodesList': nodesList, 'symbolList': symList}
+	symList = [x.value for x in nodesList]
+	return symList
 
 # Find the extra symbol in symbol list 2
 def symDiff(symList1, symList2):
@@ -66,17 +56,50 @@ def findMapping(symList1, symList2):
 		mapDict[ind + 1] = pos
 	return mapDict
 
-# Helper functions
-def getTreeSignature(tree, leavesCode):
-	nodesList = treeToNodes(tree, leavesCode)
-	return subsetNodesList(nodesList, leavesCode)
 
-def subsetNodesList(l0, indicator):
-	return [node for ind, node in enumerate(l0) if indicator[ind] == '0']	
+# Signature functions
+def getTreeSignature(tree):
+	# signature is a pair of nodes list: parents, children
+	baseThreeCodes = treeToBaseThreeCode(tree)
+	nodesList = treeToNodes(tree)
+	parentsIndicator = [x != '0' for x in baseThreeCodes]
+	childrenIndicator = [x == '0' for x in baseThreeCodes]
+	return {'parentsSignature': subsetList(nodesList, parentsIndicator), \
+			'childrenSignature': subsetList(nodesList, childrenIndicator)}
 
-def passTreeSignature(nodesList1, nodesList2):
-	for ind, nodeFromList1 in enumerate(nodesList1):
-		nodeFromList2 = nodesList2[ind]
-		if nodeFromList1 != nodeFromList2:
+def showTreeSignature(sign1):
+	print("Parents signature:")
+	print([x.View() for x in sign1['parentsSignature']])
+	print("Children signature:")
+	print([x.View() for x in sign1['childrenSignature']])
+
+def subsetList(l0, indicator):
+	return [node for ind, node in enumerate(l0) if indicator[ind]]	
+
+def passTreeSignature(sign1, sign2, quiet = True):
+	# signature 2 is the benchmark / source signature
+	if not quiet:
+		showTreeSignature(sign1)
+		showTreeSignature(sign2)
+	# signature is a pair of nodes list: parents, children
+	return compareParentsSignature(sign1['parentsSignature'], sign2['parentsSignature']) and \
+			compareChildrenSignature(sign1['childrenSignature'], sign2['childrenSignature'])
+
+def compareParentsSignature(sign1, benchmarkSign):
+	# signature is a pair of nodes list: parents, children
+	for ind, n1 in enumerate(sign1):
+		n2 = benchmarkSign[ind]
+		if n1 != n2:
 			return False
 	return True
+
+def compareChildrenSignature(sign1, benchmarkSign):
+	# signature is a pair of nodes list: parents, children
+	for ind, s1 in enumerate(sign1):
+		s2 = benchmarkSign[ind]
+		if not compareChildrenNodes(s1, s2):
+			return False
+	return True
+
+def compareChildrenNodes(node1, benchmarkNode):
+	return all([x in node1.state for x in benchmarkNode.state])
