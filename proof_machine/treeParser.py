@@ -1,6 +1,6 @@
 from pythonds.basic.stack import Stack
 from proof_machine.others import precTable, isfloat
-from proof_machine.objClass import lookupPtype, BinaryTree, Node
+from proof_machine.objClass import lookupPtype, BinaryTree, Node, lookupState
 
 def buildParseTree(fpexp, namespace):
     tokenList = fpexp.split()   # Expression to be parsed
@@ -12,28 +12,29 @@ def buildParseTree(fpexp, namespace):
     for ind, i in enumerate(tokenList):
         varParseType = lookupPtype(i, namespace)
         if varParseType == 'undefined':
+            # Add the symbol to global namespace if it's a numeric
             if isfloat(i):
                 namespace.defineVariable('symbol', i)
                 varParseType = lookupPtype(i, namespace)
         # Add nodes and move down/right the tree
         if varParseType == 'function':
-            currentTree.setRootNode(Node(i, 'function'))
+            currentTree.setRootNode(Node(i, 'function', lookupState(i, namespace)))
             currentTree.insertLeft('')
             parentStack.push(currentTree)
             currentTree = currentTree.getLeftChild()        
         elif varParseType == 'operator':
-            currentTree.setRootNode(Node(i, 'operator'))
+            currentTree.setRootNode(Node(i, 'operator', lookupState(i, namespace)))
             currentTree.insertRight('')
             parentStack.push(currentTree)
             currentTree = currentTree.getRightChild()
         elif i in ['{', '[', '(']: 
-            currentTree.setRootNode(Node(i, 'parentheses')) 
+            currentTree.setRootNode(Node(i, 'parentheses', lookupState(i, namespace))) 
             currentTree.insertLeft('')
             parentStack.push(currentTree)
             currentTree = currentTree.getLeftChild()
         # Add nodes and move up the tree
         elif varParseType == 'symbol':
-            currentTree.setRootNode(Node(i, 'symbol'))
+            currentTree.setRootNode(Node(i, 'symbol', lookupState(i, namespace)))
             currentTree = parentStack.pop()  # move up one level
             while currentTree.getRootNodeType() == 'function' and not parentStack.isEmpty():
                     currentTree = parentStack.pop()    

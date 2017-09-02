@@ -37,9 +37,9 @@ class Namespace:
 		# Interface to handle list input or single input.
 		if varName.__class__.__name__ == 'list':
 			for var in varName:	
-				self.addVariable(Variable(var, ptype))
+				self.addVariable(Variable(var, ptype, []))
 		else:
-			self.addVariable(Variable(varName, ptype))
+			self.addVariable(Variable(varName, ptype, []))
 	
 	def addVariable(self, newVariable):
 		if self.isExist(newVariable.name):
@@ -54,6 +54,22 @@ class Namespace:
 			for var in self.variableList:
 				if var.name == varName:
 					var.modify(attr, newValue)
+
+	def addState(self, varName, newValue):
+		if not self.isExist(varName):
+			raise ValueError("Cannot modify a variable that doesn't exist.")
+		else:
+			for var in self.variableList:
+				if var.name == varName:
+					var.state = var.state + [newValue]
+
+	def removeState(self, varName, newValue):
+		if not self.isExist(varName):
+			raise ValueError("Cannot modify a variable that doesn't exist.")
+		else:
+			for var in self.variableList:
+				if var.name == varName:
+					var.state.remove(newValue)
 
 	def findVariable(self, varName):
 		for x in self.variableList:
@@ -72,3 +88,7 @@ class Namespace:
 def lookupPtype(varName, namespace):
     res = namespace.findVariable(varName)
     return res.ptype if res else 'undefined'
+
+def lookupState(varName, namespace):
+    res = namespace.findVariable(varName)
+    return res.state if res else 'undefined'
