@@ -1,6 +1,11 @@
 from pythonds.basic.stack import Stack
 from proof_machine.others import precTable, isfloat
-from proof_machine.objClass import lookupPtype, BinaryTree, Node, lookupState
+from proof_machine.objClass import lookupPtype, BinaryTree, Node, lookupState, treeToString
+
+def parse(expr, globalVariables):
+    postfixExpr = infixToPostfix(expr, globalVariables)
+    fullInfixExpr = postfixToInfix(postfixExpr, globalVariables)
+    return buildParseTree(fullInfixExpr, globalVariables)
 
 def buildParseTree(fpexp, namespace):
     tokenList = fpexp.split()   # Expression to be parsed
@@ -47,6 +52,7 @@ def buildParseTree(fpexp, namespace):
             
     return exprTree
 
+# Conversion between different notation (infix, postfix, postfix simplified)
 def infixToPostfix(expr, namespace):
     prec = precTable()
     opStack = Stack()
@@ -149,7 +155,7 @@ def postfixToInfixSimplified(expr, namespace):
     else:
         raise ValueError("Final outcome doesn't have size 1.")
 
-def parse(expr, globalVariables):
-    postfixExpr = infixToPostfix(expr, globalVariables)
-    fullInfixExpr = postfixToInfix(postfixExpr, globalVariables)
-    return buildParseTree(fullInfixExpr, globalVariables)
+# A function that takes a tree and prints out a simplified string expression
+def tidyView(tree, namespace):
+    postfix = infixToPostfix(treeToString(tree), namespace)
+    print(postfixToInfixSimplified(postfix, namespace))

@@ -41,6 +41,7 @@ def baseThreeCodeToLRcode(baseThreeCode):
 		path = [x for x in allPaths if not isPathEnd(x)]
 	return "".join(sum(completedPath, []))
 
+
 # Build tree 
 # Build from LR code
 def LRcodeToTree(LRcode):
@@ -64,6 +65,7 @@ def LRcodeToTree(LRcode):
 # Build from baseThree(B3) code
 def baseThreeCodeToTree(baseThreeCode):
 	return LRcodeToTree(baseThreeCodeToLRcode(baseThreeCode))
+
 
 # Conversion from trees to codes
 # Convert tree to baseThree code
@@ -120,6 +122,7 @@ def treeToLeavesCode(tree):
 			numChildren += 1
 		res += '1' if numChildren == 0 else '0'
 	return res
+
 
 # Helper functions
 def isPathEnd(str0):

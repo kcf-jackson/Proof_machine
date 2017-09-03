@@ -93,7 +93,7 @@ class BinaryTree:
 
     def View(self):
         print(treeToString(self))
-
+        
 def treeToString(tree):
     sVal = ""
     if tree.getRootNodeType() == 'function':

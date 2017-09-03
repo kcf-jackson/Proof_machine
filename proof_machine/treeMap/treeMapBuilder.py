@@ -1,12 +1,12 @@
-from proof_machine import buildParseTree
+from proof_machine import parse
 from proof_machine.others import which
 from proof_machine.objClass import Node, lookupPtype
 from proof_machine.treeMap.treeEncoding import treeToBaseThreeCode, treeToLeavesCode
-from proof_machine.treeMap.genericTreePattern import treeToNodes, genericTreeMapping
+from proof_machine.treeMap.treeManipulation import treeToNodes, genericTreeMapping
 
 def buildTreeMapping(expr1, expr2, namespace):
-	tree1 = buildParseTree(expr1, namespace)
-	tree2 = buildParseTree(expr2, namespace)
+	tree1 = parse(expr1, namespace)
+	tree2 = parse(expr2, namespace)
 	mapSpec = getNodesMapping(tree1, tree2)	
 	extraNodes = convertSymbolToNodes(mapSpec['extraSym'], namespace)
 	sourceSignature = getTreeSignature(tree1)
@@ -24,10 +24,13 @@ def buildTreeMapping(expr1, expr2, namespace):
 	return treeFunction
 
 
-# Mapping between two trees
+# Convert list of symbols to list of nodes
 def convertSymbolToNodes(symbolList, namespace):
 	return [Node(x, lookupPtype(x, namespace)) for x in symbolList]
 
+
+# Mapping between two trees
+# Find the extra symbols in the 2nd tree and the mapping between the two trees
 def getNodesMapping(tree1, tree2):
 	a1Sym = getSymbolList(tree1)
 	a2Sym = getSymbolList(tree2)
@@ -37,6 +40,7 @@ def getNodesMapping(tree1, tree2):
 
 	return {'extraSym': extraSym, 'mapDict': mapDict}
 
+# Convert a tree into list of nodes
 def getSymbolList(tree):
 	nodesList = treeToNodes(tree)
 	symList = [x.value for x in nodesList]
@@ -79,13 +83,16 @@ def subsetList(l0, indicator):
 def passTreeSignature(sign1, sign2, quiet = True):
 	# signature 2 is the benchmark / source signature
 	if not quiet:
+		print("============== Signature of input ==============")
 		showTreeSignature(sign1)
+		print("===== Function internal signature register =====")
 		showTreeSignature(sign2)
 	# signature is a pair of nodes list: parents, children
 	return compareParentsSignature(sign1['parentsSignature'], sign2['parentsSignature']) and \
 			compareChildrenSignature(sign1['childrenSignature'], sign2['childrenSignature'])
 
 def compareParentsSignature(sign1, benchmarkSign):
+	# Parents signature checks Equality in Content, Type and State in the Node.
 	# signature is a pair of nodes list: parents, children
 	for ind, n1 in enumerate(sign1):
 		n2 = benchmarkSign[ind]

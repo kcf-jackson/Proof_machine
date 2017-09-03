@@ -1,10 +1,6 @@
 from pythonds.basic.queue import Queue
-from proof_machine.treeMap.treeEncoding import baseThreeCodeToTree
 from proof_machine.objClass import BinaryTree, Node
-
-# Tree decomposition
-# def safeGuardedTreeMapping(nodesCheckList, nodesList, treeMapCode, nodesDict):
-# 	return genericTreeMapping(nodesList, treeMapCode, nodesDict)
+from proof_machine.treeMap.treeEncoding import baseThreeCodeToTree
 
 def genericTreeMapping(nodesList, treeMapCode, nodesDict):
 	# this function creates a tree based on treeMapCode and put the nodesList into it according to nodesDict
@@ -12,51 +8,8 @@ def genericTreeMapping(nodesList, treeMapCode, nodesDict):
 	resTree = baseThreeCodeToTree(treeMapCode)
 	return relabelTree(resTree, targetNodesList)
 
-# def genericTreeMapping(tree, treeMapCode, nodesDict, addNodesList = [], nodeTreeIndicator = [], pos = [], modifyList = []):
-# 	nodesList = treeToNodes(tree, nodeTreeIndicator) + addNodesList
-# 	nodesList = nodesTransform(nodesList, pos, modifyList)
-# 	targetNodesList = mapNodes(nodesList, nodesDict)
-# 	resTree = baseThreeCodeToTree(treeMapCode)
-# 	return relabelTree(resTree, targetNodesList)
-
-# This function maps a tree into a list of nodes/tree with breadth-first order
-def treeToNodes(tree, nodeTreeIndicator = []):
-	if nodeTreeIndicator == []:
-		nodeTreeIndicator = '0' * numNodes(tree)
-	# Node is 0, Tree is 1.
-	res = [tree.getRootNode()]
-	nodeQueue = Queue()
-	L = tree.getLeftChild()
-	R = tree.getRightChild()
-	if L != None:
-		nodeQueue.enqueue(L)
-	if R != None:
-		nodeQueue.enqueue(R)
-	count = 1  #count must start at 1
-	while not nodeQueue.isEmpty() and count < len(nodeTreeIndicator):
-		current = nodeQueue.dequeue()
-		if nodeTreeIndicator[count] == '0':
-			res.append(current.getRootNode())
-			L = current.getLeftChild()
-			R = current.getRightChild()
-			if L != None:
-				nodeQueue.enqueue(L)
-			if R != None:
-				nodeQueue.enqueue(R)
-		elif nodeTreeIndicator[count] == '1':
-			res.append(current)
-		count += 1
-	return res	
-
-# This function modifies a nodesList
-# def nodesTransform(nodesList, pos, modifyList):
-# 	if modifyList != []:
-# 		for ind, node in enumerate(modifyList):
-# 			nodesList[pos[ind] - 1] = node
-# 	return nodesList
-
+# This function permutes the nodesList according to the supplied dictionary
 def mapNodes(nodesList, nodesDict):
-	# this function permute the nodesList according to the supplied dictionary
 	resList = []
 	for ind, key in enumerate(nodesDict):
 		resList.append(nodesList[nodesDict[key] - 1])  #must be in order
@@ -93,7 +46,38 @@ def relabelTree(tree, nodeList):
 			current.setRightChild(head.getRightChild())
 	return tree
 
-# Helper function
+
+# This function maps a tree into a list of nodes/tree with breadth-first order
+def treeToNodes(tree, nodeTreeIndicator = []):
+	if nodeTreeIndicator == []:
+		nodeTreeIndicator = '0' * numNodes(tree)
+	# Node is 0, Tree is 1.
+	res = [tree.getRootNode()]
+	nodeQueue = Queue()
+	L = tree.getLeftChild()
+	R = tree.getRightChild()
+	if L != None:
+		nodeQueue.enqueue(L)
+	if R != None:
+		nodeQueue.enqueue(R)
+	count = 1  #count must start at 1
+	while not nodeQueue.isEmpty() and count < len(nodeTreeIndicator):
+		current = nodeQueue.dequeue()
+		if nodeTreeIndicator[count] == '0':
+			res.append(current.getRootNode())
+			L = current.getLeftChild()
+			R = current.getRightChild()
+			if L != None:
+				nodeQueue.enqueue(L)
+			if R != None:
+				nodeQueue.enqueue(R)
+		elif nodeTreeIndicator[count] == '1':
+			res.append(current)
+		count += 1
+	return res	
+
+
+# Helper functions
 # This function counts the number of nodes in a tree
 def numNodes(tree):
 	res = [tree.getRootNode()]
