@@ -24,7 +24,7 @@ manipulation:
    List: ['{', '[', '(', ')', ']', '}']
 
 
-objects:
+state:
 - constant
 - random variable / measurable function
 - set (for probability)
@@ -50,12 +50,12 @@ sub-gaussian
 
 Todo:
 Problem in order:
-- prefix to postfix and postfix natural notation
 - state variables
     + This requires a new module handling the namespace. This is done in classVariable.py.
     Next step is to integrate it with TreeParser and MapBuilder. You probably need some experimentation with some functions.
 - more general tree mapping creators
     + allow additional input
+        * use run-time example generator + MapBuilder
     + allow state variable signature
         * state variables is implemented, but the problem is treeMapping only checks the state of the parent variables, not children. This require state inference for operators and functions.
 
@@ -78,43 +78,10 @@ Package
 Sub-tree mapping
 choose list of proofs
 
+OK - prefix to postfix and postfix natural notation
 OK - Equation class - transitivity
 OK - Associative Law, Distributive Law
 OK - Arithmetic with tree: +, - *, /, ^, exp, log
 OK - Equation class: apply function with optional arguments.
 OK - partial functional / curry approach to buildParseTree
 OK - debug tree Parser for inconsistent parsing with extra '()'
-
-Filelist
-- classNode.py: Node class and BinaryTree class
-- exprTree.py: 'buildParseTree' function
-- classEquation.py: Equation class
-- exprTreeMethods.py:
-- main.py:
-
-basicTreePattern:
-genericTreePattern:
-generateMapping:
-arithmetic:
-distributiveLaw:
-factoriseAndExpand:
-operatorRelation
-simplify
-classDerivation
-classEquation
-classTree
-codeTree
-
-load
-main
-setTechniques
-theorems
-treeEquality
-unitTest
-util
-
-Done:
-assoiciativeLaw.py: forwardAssociative, backwardAssociative
-inequality.py: cauchySchwarz
-codeTree.py: LRcodeToBaseThreeCode, baseThreeCodeToLRcode, LRcodeToTree, baseThreeCodeToTree
-operatorRelation.py: invariant, symmetry, tautology
