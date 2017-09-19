@@ -97,7 +97,7 @@ class BinaryTree:
 def treeToString(tree):
     sVal = ""
     if tree.getRootNodeType() == 'function':
-        return str(tree.getRootNodeValue()) + ' ' + treeToString(tree.getLeftChild())
+        return str(tree.getRootNodeValue()) + ' ( ' + treeToString(tree.getLeftChild()) + ' ) '
     elif tree.getRootNodeType() == 'symbol':
         return str(tree.getRootNodeValue())
     elif tree.getRootNodeType() == 'operator':
