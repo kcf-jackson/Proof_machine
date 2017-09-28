@@ -1,4 +1,4 @@
-from proof_machine.objClass.classTree import BinaryTree, treeToString
+from proof_machine.objClass.classTree import BinaryTree
 from proof_machine.treeMap.treeParser import parse, tidyView
 
 class Derivation:
