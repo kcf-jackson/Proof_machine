@@ -47,7 +47,7 @@ def base_three_code_to_lr_code(base_three_code):
     return "".join(sum(completed_path, []))
 
 
-# Build tree 
+# Build tree
 # - Build tree from LR code
 def lr_code_to_tree(lr_code):
     """Builds tree from LR code"""
@@ -57,13 +57,13 @@ def lr_code_to_tree(lr_code):
         if i == '0':
             working_tree = master_tree
         elif i == 'L':
-            if working_tree.leftChild is None:
-                working_tree.insertLeft(Node('L', 'symbol'))
-            working_tree = working_tree.leftChild
+            if working_tree.left_child is None:
+                working_tree.insert_left(Node('L', 'symbol'))
+            working_tree = working_tree.left_child
         elif i == 'R':
-            if working_tree.rightChild is None:
-                working_tree.insertRight(Node('R', 'symbol'))
-            working_tree = working_tree.rightChild
+            if working_tree.right_child is None:
+                working_tree.insert_right(Node('R', 'symbol'))
+            working_tree = working_tree.right_child
         else:
             print("Character " + i + " is not allowed.")
     return master_tree
@@ -80,7 +80,7 @@ def base_three_code_to_tree(base_tree_code):
 def tree_to_base_three_code(tree):
     """Converts tree to baseThree code"""
     node_queue = Queue()
-    node_queue, num_children = count_children_and_enqueue(tree, node_queue, num_children = 0)
+    node_queue, num_children = count_children_and_enqueue(tree, node_queue, num_children=0)
     res = [str(num_children)]
     while not node_queue.isEmpty():
         current = node_queue.dequeue()
@@ -94,7 +94,7 @@ def tree_to_leaves_indicator(tree):
     """Converts tree to leaves indicators"""
     # Leaves are 1, others are 0
     node_queue = Queue()
-    node_queue, num_children = count_children_and_enqueue(tree, node_queue, num_children = 0)
+    node_queue, num_children = count_children_and_enqueue(tree, node_queue, num_children=0)
     res = '1' if num_children == 0 else '0'
     while not node_queue.isEmpty():
         current = node_queue.dequeue()

@@ -8,14 +8,14 @@ from proof_machine.others import is_float
 
 
 def parse(expr, namespace):
-    """converts the input str into full infix notation then parses it into a tree"""
+    """converts the input get_str into full infix notation then parses it into a tree"""
     postfix_expr = infix_to_postfix(expr, namespace)
     full_infix_expr = postfix_to_infix(postfix_expr, namespace)
     return build_parse_tree(full_infix_expr, namespace)
 
 
 def build_parse_tree(fpexp, namespace):
-    """parses a str in full infix notation into a tree"""
+    """parses a get_str in full infix notation into a tree"""
     token_list = fpexp.split()  # Expression to be parsed
     expr_tree = BinaryTree('')  # Expression Tree
     parent_stack = Stack()  # Keep track of the parent node
@@ -29,23 +29,23 @@ def build_parse_tree(fpexp, namespace):
             if is_float(i):
                 namespace.defineVariable('symbol', i)
                 var_parse_type = lookup_ptype(i, namespace)
-        # Add nodes and move down/right the tree
+        # Add get_nodes and move down/right the tree
         if var_parse_type == 'function':
             current_tree.key = Node(i, 'function', lookup_state(i, namespace))
-            current_tree.insertLeft('')
+            current_tree.insert_left('')
             parent_stack.push(current_tree)
-            current_tree = current_tree.leftChild
+            current_tree = current_tree.left_child
         elif var_parse_type == 'operator':
             current_tree.key = Node(i, 'operator', lookup_state(i, namespace))
-            current_tree.insertRight('')
+            current_tree.insert_right('')
             parent_stack.push(current_tree)
-            current_tree = current_tree.rightChild
+            current_tree = current_tree.right_child
         elif i in ['{', '[', '(']:
             current_tree.key = Node(i, 'parentheses', lookup_state(i, namespace))
-            current_tree.insertLeft('')
+            current_tree.insert_left('')
             parent_stack.push(current_tree)
-            current_tree = current_tree.leftChild
-        # Add nodes and move up the tree
+            current_tree = current_tree.left_child
+        # Add get_nodes and move up the tree
         elif var_parse_type == 'symbol':
             current_tree.key = Node(i, 'symbol', lookup_state(i, namespace))
             current_tree = parent_stack.pop()  # move up one level

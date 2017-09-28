@@ -1,5 +1,4 @@
-from .treeParser import buildParseTree, parse, infixToPostfix, postfixToInfix, postfixToInfixSimplified, tidyView
-from .treeMapBuilder import buildTreeMapping
-from .treeEncoding import LRcodeToBaseThreeCode, baseThreeCodeToLRcode, LRcodeToTree, baseThreeCodeToTree, treeToBaseThreeCode
-from .treeManipulation import treeToNodes
-from .stateInference import inferState
+from proof_machine.interaction.map_builder.tree_map_builder import build_tree_mapping
+from .encode_tree import lr_code_to_base_three_code, base_three_code_to_lr_code, lr_code_to_tree, \
+    base_three_code_to_tree, tree_to_base_three_code
+from .infer_state import infer_state

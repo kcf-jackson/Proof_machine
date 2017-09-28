@@ -115,7 +115,7 @@ def postfix_to_infix_simplified(expr, namespace):
 
 def tidy_view(tree, namespace, display=True):
     """takes a tree and prints out a string in simplified infix notation"""
-    postfix = infix_to_postfix(tree.str(), namespace)
+    postfix = infix_to_postfix(tree.get_str(), namespace)
     if display:
         print(postfix_to_infix_simplified(postfix, namespace))
     else:
