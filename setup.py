@@ -7,6 +7,6 @@ setup(name='proof_machine',
       author='Jackson Kwok',
       author_email='kcf.jackson@gmail.com',
       license='MIT',
-      packages=['proof_machine', 'proof_machine.objClass', 'proof_machine.manipulation', 'proof_machine.factory'],
+      packages=['proof_machine', 'proof_machine.object', 'proof_machine.interaction', 'proof_machine.others'],
       install_requires=['pythonds', 'orderedset'],
       zip_safe=False)
