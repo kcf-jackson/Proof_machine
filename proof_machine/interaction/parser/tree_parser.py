@@ -1,10 +1,9 @@
 """This file contains the functions to parse a string into a (binary) tree"""
 from pythonds.basic.stack import Stack
 
-from proof_machine.interaction.parser.infix_postfix import infix_to_postfix, postfix_to_infix
-from proof_machine.object.namespace import lookup_ptype, lookup_state
-from proof_machine.object.tree import BinaryTree, Node
+from proof_machine.object import BinaryTree, lookup_ptype, get_node_from_namespace
 from proof_machine.others import is_float
+from .infix_postfix import infix_to_postfix, postfix_to_infix
 
 
 def parse(expr, namespace):
@@ -27,27 +26,27 @@ def build_parse_tree(fpexp, namespace):
         if var_parse_type == 'undefined':
             # Add the symbol to global namespace if it's a numeric
             if is_float(i):
-                namespace.defineVariable('symbol', i)
+                namespace.define_variable('symbol', i)
                 var_parse_type = lookup_ptype(i, namespace)
-        # Add get_nodes and move down/right the tree
+        # Add flatten and move down/right the tree
         if var_parse_type == 'function':
-            current_tree.key = Node(i, 'function', lookup_state(i, namespace))
+            current_tree.key = get_node_from_namespace(i, namespace)
             current_tree.insert_left('')
             parent_stack.push(current_tree)
             current_tree = current_tree.left_child
         elif var_parse_type == 'operator':
-            current_tree.key = Node(i, 'operator', lookup_state(i, namespace))
+            current_tree.key = get_node_from_namespace(i, namespace)
             current_tree.insert_right('')
             parent_stack.push(current_tree)
             current_tree = current_tree.right_child
         elif i in ['{', '[', '(']:
-            current_tree.key = Node(i, 'parentheses', lookup_state(i, namespace))
+            current_tree.key = get_node_from_namespace(i, namespace)
             current_tree.insert_left('')
             parent_stack.push(current_tree)
             current_tree = current_tree.left_child
-        # Add get_nodes and move up the tree
+        # Add flatten and move up the tree
         elif var_parse_type == 'symbol':
-            current_tree.key = Node(i, 'symbol', lookup_state(i, namespace))
+            current_tree.key = get_node_from_namespace(i, namespace)
             current_tree = parent_stack.pop()  # move up one level
             while current_tree.key.ptype == 'function' and not parent_stack.isEmpty():
                 current_tree = parent_stack.pop()
