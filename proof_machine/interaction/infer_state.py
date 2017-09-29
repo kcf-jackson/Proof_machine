@@ -21,8 +21,8 @@ def infer_state(tree):
     while not res_stack.isEmpty():
         current = res_stack.pop()
         if current.key.ptype in ['function', 'operator']:
-            left_state = current.leftChild.key.state if current.leftChild is not None else []
-            right_state = current.rightChild.key.state if current.rightChild is not None else []
+            left_state = current.left_child.key.state if current.left_child is not None else []
+            right_state = current.right_child.key.state if current.right_child is not None else []
             new_state = merge_state(current.key.state, unique(left_state + right_state))
             current.key.state = new_state
     return tree
@@ -30,8 +30,8 @@ def infer_state(tree):
 
 def enqueue_and_push_children(node_queue, res_stack, tree):
     """enqueues and pushes children if they are not empty"""
-    left_child = tree.leftChild
-    right_child = tree.rightChild
+    left_child = tree.left_child
+    right_child = tree.right_child
     if left_child is not None:
         node_queue.enqueue(left_child)
         res_stack.push(left_child)

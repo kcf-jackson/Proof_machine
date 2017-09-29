@@ -15,9 +15,9 @@ def is_float(value):
         return False
 
 
-def subset_list(l0, indicator):
+def subset_list(list0, indicator):
     """Subsets a list based on list of True / False"""
-    return [node for ind, node in enumerate(l0) if indicator[ind]]
+    return [node for ind, node in enumerate(list0) if indicator[ind]]
 
 
 # R functions

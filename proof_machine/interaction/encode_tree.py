@@ -1,7 +1,8 @@
 """This file deals with the different encodings of a tree: LR code, base-3 code, leaves code."""
 from pythonds.basic.queue import Queue
-from proof_machine.others import map2, unique
+
 from proof_machine.object import BinaryTree, Node
+from proof_machine.others import map2, unique
 
 
 # Conversion between LR/baseThreeCode
@@ -15,8 +16,8 @@ def lr_code_to_base_three_code(lr_code):
     children = ['L', 'R']
     res = ""
     for i in range(max_path_length + 1):
-        head = unique([x[:(i+1)] for x in paths])
-        new_complete_path, head = [x for x in head if len(x) == i], [x for x in head if len(x) >= (i+1)]
+        head = unique([x[:(i + 1)] for x in paths])
+        new_complete_path, head = [x for x in head if len(x) == i], [x for x in head if len(x) >= (i + 1)]
         if len(new_complete_path) > 0:
             res += '0' * len(new_complete_path)
         for ind, _ in enumerate(children):
@@ -25,7 +26,7 @@ def lr_code_to_base_three_code(lr_code):
                 num_children = sum(has_children)
                 if num_children != 0:
                     res += str(num_children)
-        children = sum([[x+'L', x+'R'] for x in children], [])
+        children = sum([[x + 'L', x + 'R'] for x in children], [])
     return res
 
 
@@ -80,39 +81,35 @@ def base_three_code_to_tree(base_tree_code):
 def tree_to_base_three_code(tree):
     """Converts tree to baseThree code"""
     node_queue = Queue()
-    node_queue, num_children = count_children_and_enqueue(tree, node_queue, num_children=0)
+    node_queue, num_children = count_children_and_enqueue(tree, node_queue)
     res = [str(num_children)]
     while not node_queue.isEmpty():
         current = node_queue.dequeue()
-        node_queue, num_children = count_children_and_enqueue(current, node_queue, 0)
+        node_queue, num_children = count_children_and_enqueue(current, node_queue)
         res.append(str(num_children))
     return "".join(res)
 
 
 # - Convert tree to leaves indicator
 def tree_to_leaves_indicator(tree):
-    """Converts tree to leaves indicators"""
-    # Leaves are 1, others are 0
-    node_queue = Queue()
-    node_queue, num_children = count_children_and_enqueue(tree, node_queue, num_children=0)
-    res = '1' if num_children == 0 else '0'
-    while not node_queue.isEmpty():
-        current = node_queue.dequeue()
-        node_queue, num_children = count_children_and_enqueue(current, node_queue, 0)
-        res += '1' if num_children == 0 else '0'
+    """Converts tree to leaves indicators (str) (Leaves are 1, others are 0)"""
+    res = ""
+    for num_children in tree_to_base_three_code(tree):
+        res += '1' if num_children == '0' else '0'
     return res
 
 
-def count_children_and_enqueue(tree, node_queue, num_children):
+def count_children_and_enqueue(tree, node_queue):
     """enqueues children if they are not empty"""
-    left_child = tree.leftChild
-    right_child = tree.rightChild
+    num_children = 0
+    left_child = tree.left_child
+    right_child = tree.right_child
     if left_child is not None:
         num_children += 1
-        node_queue.enqueue(tree.leftChild)
+        node_queue.enqueue(tree.left_child)
     if right_child is not None:
         num_children += 1
-        node_queue.enqueue(tree.rightChild)
+        node_queue.enqueue(tree.right_child)
     return node_queue, num_children
 
 

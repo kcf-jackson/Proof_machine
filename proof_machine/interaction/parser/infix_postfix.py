@@ -1,8 +1,7 @@
 """The file contains functions to convert between the different notations (infix, postfix, postfix simplified)"""
-
 from pythonds.basic.stack import Stack
 
-from proof_machine.object.namespace import lookup_ptype
+from proof_machine.object import lookup_ptype
 from proof_machine.others import get_precedence_table
 
 
@@ -113,10 +112,9 @@ def postfix_to_infix_simplified(expr, namespace):
         raise ValueError("Final outcome doesn't have size 1.")
 
 
-def tidy_view(tree, namespace, display=True):
+def tidy_view(tree, namespace, return_object=False):
     """takes a tree and prints out a string in simplified infix notation"""
     postfix = infix_to_postfix(tree.get_str(), namespace)
-    if display:
-        print(postfix_to_infix_simplified(postfix, namespace))
-    else:
+    print(postfix_to_infix_simplified(postfix, namespace))
+    if return_object:
         return postfix_to_infix_simplified(postfix, namespace)

@@ -1,6 +1,8 @@
-from proof_machine.treeMap.treeMapBuilder import buildTreeMapping
+"""This file contains the FunctionSpace class"""
+from proof_machine.interaction.map_builder import build_tree_mapping
 
 
+# TODO Refactor this class
 class FunctionSpace:
     """keeps track of the mappings between trees.
 
@@ -12,25 +14,25 @@ class FunctionSpace:
         self.functionList = {}
         self.namespace = namespace
 
-    def addFunction(self, example):
+    def add_function(self, example):
         """ adds function to the functionList
 
         The function takes a list of form [input, output, function name] or [input, output, [name_1, name2]].
         In the former case, it adds a tree mapping (from input to output) with the name 'function name';
         in the latter case, it add two mappings, one with the usual direction and one with the reverse direction (of input, output).
         """
-        inputStr = example[0]
-        outputStr = example[1]
-        nameStr = example[2]
-        if len(nameStr) == 2:
-            self.functionList[nameStr[0]] = buildTreeMapping(inputStr, outputStr, self.namespace)
-            self.functionList[nameStr[1]] = buildTreeMapping(outputStr, inputStr, self.namespace)
-            print("Added function:  {:^26} \t that maps {:^35} \t to {:^40}".format(nameStr[0], inputStr, outputStr))
-            print("Added function:  {:^26} \t that maps {:^35} \t to {:^40}".format(nameStr[1], outputStr, inputStr))
+        input_str = example[0]
+        output_str = example[1]
+        name_str = example[2]
+        if len(name_str) == 2:
+            self.functionList[name_str[0]] = build_tree_mapping(input_str, output_str, self.namespace)
+            self.functionList[name_str[1]] = build_tree_mapping(output_str, input_str, self.namespace)
+            print("Added function:  {:^26} \t that maps {:^35} \t to {:^40}".format(name_str[0], input_str, output_str))
+            print("Added function:  {:^26} \t that maps {:^35} \t to {:^40}".format(name_str[1], output_str, input_str))
         else:
-            self.functionList[nameStr] = buildTreeMapping(inputStr, outputStr, self.namespace)
-            print("Added function:  {:^26} \t that maps {:^35} \t to {:^40}".format(nameStr, inputStr, outputStr))
+            self.functionList[name_str] = build_tree_mapping(input_str, output_str, self.namespace)
+            print("Added function:  {:^26} \t that maps {:^35} \t to {:^40}".format(name_str, input_str, output_str))
 
-    def addListOfFunctions(self, exampleList):
+    def add_list_of_functions(self, example_list):
         """ add a list of functinos to the functionList. """
-        [self.addFunction(x) for x in exampleList]
+        [self.add_function(x) for x in example_list]

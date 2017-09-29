@@ -1,6 +1,5 @@
 setup.py
 proof_machine/__init__.py
-proof_machine/strExpr.py
 proof_machine/treeParser.py
 proof_machine.egg-info/PKG-INFO
 proof_machine.egg-info/SOURCES.txt
@@ -9,13 +8,15 @@ proof_machine.egg-info/not-zip-safe
 proof_machine.egg-info/requires.txt
 proof_machine.egg-info/top_level.txt
 proof_machine/objClass/__init__.py
+proof_machine/objClass/classDerivation.py
 proof_machine/objClass/classTree.py
 proof_machine/objClass/classVariable.py
 proof_machine/others/__init__.py
 proof_machine/others/initialisation.py
 proof_machine/others/util.py
 proof_machine/treeMap/__init__.py
-proof_machine/treeMap/expressionAnalysis.py
-proof_machine/treeMap/genericTreePattern.py
+proof_machine/treeMap/stateInference.py
 proof_machine/treeMap/treeEncoding.py
 proof_machine/treeMap/treeEquality.py
+proof_machine/treeMap/treeManipulation.py
+proof_machine/treeMap/treeMapBuilder.py
